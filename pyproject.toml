@@ -1,0 +1,9 @@
+[project]
+name = "continual-buffer-optimization"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "avalanche-lib>=0.6.0",
+]
