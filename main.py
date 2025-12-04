@@ -27,8 +27,16 @@ eval_plugin = EvaluationPlugin(
     loggers=[InteractiveLogger()]
 )
 
-cl_strategy = Naive(model, optimizer, criterion, train_mb_size=32, train_epochs=2, 
-    eval_mb_size=32, evaluator=eval_plugin, device=device)
+cl_strategy = Naive(
+    model=model, 
+    optimizer=optimizer, 
+    criterion=criterion, 
+    train_mb_size=32, 
+    train_epochs=2, 
+    eval_mb_size=32, 
+    evaluator=eval_plugin, 
+    device=device
+)
 
 results = []
 for train_task in train_stream:
