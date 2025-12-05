@@ -13,7 +13,7 @@ class Buffer:
     :attr current_size: Current number of samples stored in the buffer.
     :attr device: Device where the buffer tensors are stored. (cpu / cuda)
     """
-    def __init__(self, max_size, input_shape, device='cpu'):
+    def __init__(self, max_size, input_shape, device):
         """
         COnstructor foor the Buffer class.
         
@@ -60,7 +60,7 @@ class Buffer:
     def replace_at_indices(self, i, data, labels, task_id=None):
         """
         Replaces data at specified indices in the buffer.
-        to-do: maybe sth more efficient than singular indexing?
+        :param i: Indices where data should be replaced. Can be a list or array of indices.
         """
         data, labels = data.to(self.device), labels.to(self.device)
         self.examples[i] = data
@@ -78,6 +78,29 @@ class Buffer:
         return (self.examples[:self.current_size].clone(), 
                 self.labels[:self.current_size].clone(), 
                 self.task_ids[:self.current_size].clone())
+    
+    def is_empty(self):
+        return self.current_size == 0
+    
+    def clear(self):
+        """
+        Clears the buffer.
+        """
+        self.current_size = 0
+    
+    def print_data(self):
+        """
+        Prints the contents of the buffer.
+        """
+        print("Buffer contents:")
+        for i in range(self.current_size):
+            print(f"Index {i}: Label={self.labels[i].item()}, Task ID={self.task_ids[i].item()}")
+
+        unique, counts = torch.unique(self.labels[:self.current_size], return_counts=True)
+        print("Class distribution in buffer:")
+        for u, c in zip(unique, counts):
+            print(f"Class {u.item()}: {c.item()} samples")
+        
 
     def __len__(self):
-        return self.current_size
+        return self.current_size 
