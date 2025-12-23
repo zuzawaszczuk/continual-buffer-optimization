@@ -1,15 +1,14 @@
-from __future__ import annotations
+from typing import Dict, Optional, Union
 
-from typing import Optional, Union, Dict
 import torch
-from torch.nn import Module
-from torch.optim import Optimizer
-from avalanche.benchmarks.utils import AvalancheDataset, AvalancheConcatDataset
+from avalanche.benchmarks.utils import AvalancheConcatDataset, AvalancheDataset
 from avalanche.training.templates import SupervisedTemplate
 from avalanche.training.templates.strategy_mixin_protocol import CriterionType
+from torch.nn import Module
+from torch.optim import Optimizer
 
 
-class OptimizedBufferStrategy(SupervisedTemplate):
+class OptimizedBufferStrategy(SupervisedTemplate):  # type: ignore[misc]
     def __init__(
         self,
         model: Module,
@@ -35,7 +34,7 @@ class OptimizedBufferStrategy(SupervisedTemplate):
     def train_dataset_adaptation(self, dataset: AvalancheDataset) -> AvalancheDataset:
         task_id = self.experience.task_label
 
-        if task_id in self.task_buffers:
+        if self.task_buffers is not None and task_id in self.task_buffers:
             dataset = AvalancheConcatDataset([self.task_buffers[task_id], dataset])
 
         return dataset

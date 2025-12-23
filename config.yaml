@@ -1,18 +1,36 @@
-Objective:
-    dataset: 
-      name: "MNIST"
-      n_tasks: 3
-      classes_per_task: 2
-      eval_ratio: 0.2
-      test_ratio: 0.2
-      seed: 42
+dataset: 
+  name: "MNIST"
+  n_tasks: 3
+  classes_per_task: 2
+  eval_ratio: 0.2
+  test_ratio: 0.2
+  seed: 42
 
-    model:
-      type: "SimpleMLP"
-      input_dim: 784
-      hidden_dims: 128
-      optimizer: "SGD"
-      lr: 0.01
-      criterion: "CrossEntropyLoss"
+model:
+  type: "SimpleMLP"
+  input_dim: 784
+  hidden_dims: 128
+  optimizer: "SGD"
+  lr: 0.01
+  criterion: "CrossEntropyLoss"
 
+strategies:
+  - name: "HillClimbing"
+    n_calls: 50
+    params: {
+      restart: 3
+    } 
+  - name: "RandomSearch"
+    n_calls: 50
+    params: {}
+  - name: "Genetic"
+    n_calls: 10
+    params: {
+      population: 600,
+      cross: "one point",
+      mutation_rate: 0.1,
+      elite_size: 50,
+      tournament_size: 5
+    }
+      
 
