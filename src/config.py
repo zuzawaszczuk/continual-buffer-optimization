@@ -6,7 +6,6 @@ from pydantic import BaseModel
 class DatasetConfig(BaseModel):
     name: str
     n_tasks: int
-    classes_per_task: int
     eval_ratio: float
     test_ratio: float
     seed: int

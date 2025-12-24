@@ -1,7 +1,6 @@
 dataset: 
-  name: "MNIST"
-  n_tasks: 3
-  classes_per_task: 2
+  name: "SplitMNIST"
+  n_tasks: 5
   eval_ratio: 0.2
   test_ratio: 0.2
   seed: 42

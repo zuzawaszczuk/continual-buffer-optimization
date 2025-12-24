@@ -1,7 +1,9 @@
 import yaml
 
 from config import Config
-from objective.function import objective_function
+
+# from objective.function import objective_function
+from objective.manage_benchmark import get_benchmark, print_dataset_stats
 
 with open("config.yaml", "r") as file:
     data = yaml.safe_load(file)
@@ -9,4 +11,5 @@ with open("config.yaml", "r") as file:
 config = Config(**data)
 
 print(config.dataset.name)
-objective_function(config)
+benchmark = get_benchmark(config.dataset)
+print_dataset_stats(benchmark)
