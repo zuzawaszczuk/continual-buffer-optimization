@@ -1,8 +1,6 @@
 import yaml
 
 from config import Config
-
-# from objective.function import objective_function
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
 
 with open("config.yaml", "r") as file:

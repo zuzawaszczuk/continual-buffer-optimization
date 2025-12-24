@@ -5,7 +5,12 @@ from avalanche.benchmarks import (
     benchmark_with_validation_stream,
     split_validation_class_balanced,
 )
-from avalanche.benchmarks.classic import SplitCIFAR10, SplitMNIST
+from avalanche.benchmarks.classic import (
+    SplitCIFAR10,
+    SplitCIFAR100,
+    SplitCIFAR110,
+    SplitMNIST,
+)
 from avalanche.benchmarks.scenarios.dataset_scenario import benchmark_from_datasets
 from avalanche.benchmarks.utils import as_classification_dataset
 
@@ -16,10 +21,7 @@ def get_benchmark(dataset_config: DatasetConfig) -> NCScenario:
     torch.manual_seed(dataset_config.seed)
     np.random.seed(dataset_config.seed)
 
-    full_benchmark = SplitMNIST(
-        n_experiences=5,
-        seed=dataset_config.seed,
-    )
+    full_benchmark = factory_benchmark(dataset_config.name, dataset_config.seed)
 
     train_experiences = full_benchmark.train_stream[: dataset_config.n_tasks]
     test_experiences = full_benchmark.test_stream[: dataset_config.n_tasks]
@@ -65,3 +67,20 @@ def print_dataset_stats(benchmark: NCScenario) -> None:
         print(f"  Test examples: {len(test_dataset)}")
 
         print("-" * 50)
+
+
+def factory_benchmark(name: str, seed: int) -> NCScenario:
+    name = name.lower()
+
+    benchmark_map = {
+        "splitmnist": (SplitMNIST, 5),
+        "splitcifar10": (SplitCIFAR10, 5),
+        "splitcifar100": (SplitCIFAR100, 10),
+        "splitcifar110": (SplitCIFAR110, 10),
+    }
+
+    if name not in benchmark_map:
+        raise ValueError(f"Unknown dataset: {name}")
+
+    BenchmarkClass, n_experiences = benchmark_map[name]
+    return BenchmarkClass(n_experiences=n_experiences, seed=seed)
