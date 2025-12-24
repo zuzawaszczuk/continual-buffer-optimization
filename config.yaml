@@ -1,6 +1,6 @@
 dataset: 
   name: "SplitMNIST"
-  n_tasks: 5
+  n_tasks: 3
   eval_ratio: 0.2
   test_ratio: 0.2
   seed: 42
@@ -9,9 +9,12 @@ model:
   type: "SimpleMLP"
   input_dim: 784
   hidden_dims: 128
+  output_dim: 6
   optimizer: "SGD"
   lr: 0.01
   criterion: "CrossEntropyLoss"
+  epochs: 10
+  batch: 128
 
 strategies:
   - name: "HillClimbing"

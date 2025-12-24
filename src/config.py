@@ -15,9 +15,12 @@ class ModelConfig(BaseModel):
     type: str
     input_dim: int
     hidden_dims: Union[int, List[int]]
+    output_dim: int
     optimizer: str
     lr: float
     criterion: str
+    epochs: int
+    batch: int
 
 
 class HyperparamStrategyConfig(BaseModel):

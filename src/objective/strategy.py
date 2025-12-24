@@ -1,7 +1,8 @@
 from typing import Dict, Optional, Union
 
 import torch
-from avalanche.benchmarks.utils import AvalancheConcatDataset, AvalancheDataset
+from avalanche.benchmarks.utils import AvalancheDataset
+from torch.utils.data import ConcatDataset
 from avalanche.training.templates import SupervisedTemplate
 from avalanche.training.templates.strategy_mixin_protocol import CriterionType
 from torch.nn import Module
@@ -35,6 +36,6 @@ class OptimizedBufferStrategy(SupervisedTemplate):  # type: ignore[misc]
         task_id = self.experience.task_label
 
         if self.task_buffers is not None and task_id in self.task_buffers:
-            dataset = AvalancheConcatDataset([self.task_buffers[task_id], dataset])
+            dataset = ConcatDataset([self.task_buffers[task_id], dataset])
 
         return dataset
