@@ -18,6 +18,7 @@ class ModelConfig(BaseModel):
     output_dim: int
     optimizer: str
     lr: float
+    dropout: float
     criterion: str
     epochs: int
     batch: int

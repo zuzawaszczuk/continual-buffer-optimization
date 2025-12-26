@@ -1,5 +1,3 @@
-import numpy as np
-import torch
 from avalanche.benchmarks import (
     NCScenario,
     benchmark_with_validation_stream,
@@ -18,9 +16,6 @@ from config import DatasetConfig
 
 
 def get_benchmark(dataset_config: DatasetConfig) -> NCScenario:
-    torch.manual_seed(dataset_config.seed)
-    np.random.seed(dataset_config.seed)
-
     full_benchmark = factory_benchmark(dataset_config.name, dataset_config.seed)
 
     train_experiences = full_benchmark.train_stream[: dataset_config.n_tasks]

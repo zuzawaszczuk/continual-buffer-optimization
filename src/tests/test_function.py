@@ -1,32 +1,55 @@
-from avalanche.benchmarks.classic import SplitMNIST
+import numpy as np
+import pytest
+from avalanche.benchmarks.classic import SplitCIFAR10
 
 from objective import get_tasks_buffers
-import numpy as np
 
 
-def test_get_tasks_buffers():
-    benchmark = SplitMNIST(n_experiences=5, return_task_id=True)
+def test_get_tasks_buffers_cifar() -> None:
+    benchmark = SplitCIFAR10(n_experiences=5, return_task_id=True)
+    # cifar 10k in train date per 1 task
 
-    total_samples = sum(len(exp.dataset) for exp in benchmark.train_stream)
-    mask = np.zeros(total_samples, dtype=int)
-    mask[::2] = 1
+    masks = {}
+    masks[0] = np.random.choice(np.arange(0, 10000), size=100)
+    masks[1] = np.random.choice(np.arange(0, 10000), size=100)
+    masks[2] = np.random.choice(np.arange(0, 10000), size=100)
+    masks[3] = np.random.choice(np.arange(0, 10000), size=100)
 
-    task_buffers = get_tasks_buffers(benchmark, mask)
+    task_buffers = get_tasks_buffers(benchmark, masks)
 
     assert len(task_buffers) == len(benchmark.train_stream) - 1
+    assert len(task_buffers[0]) == 100
+    assert len(task_buffers[1]) == 200
+    assert len(task_buffers[2]) == 300
+    assert len(task_buffers[3]) == 400
 
-    # # Sprawdzamy, że wszystkie przykłady w bufory mają mask=1
-    # mask_idx = 0
-    # for exp in benchmark.train_stream[:-1]:
-    #     buf = task_buffers[exp.id + 1]
-    #     num_samples = len(exp.dataset)
-    #     current_mask = mask[mask_idx : mask_idx + num_samples]
-    #     mask_idx += num_samples
 
-    #     if buf is not None:
-    #         # Wszystkie indeksy w buf powinny odpowiadać pozycji mask=1
-    #         buf_indices = buf.indices
-    #         for idx in buf_indices:
-    #             assert current_mask[idx] == 1
+def test_get_tasks_buffers_cifar_whole() -> None:
+    benchmark = SplitCIFAR10(n_experiences=5, return_task_id=True)
 
-    # print("Test passed: get_tasks_buffers działa poprawnie.")
+    masks = {}
+    masks[0] = np.arange(10000)
+    masks[1] = np.arange(10000)
+    masks[2] = np.arange(10000)
+    masks[3] = np.arange(10000)
+
+    task_buffers = get_tasks_buffers(benchmark, masks)
+
+    assert len(task_buffers) == len(benchmark.train_stream) - 1
+    assert len(task_buffers[0]) == 10000
+    assert len(task_buffers[1]) == 20000
+    assert len(task_buffers[2]) == 30000
+    assert len(task_buffers[3]) == 40000
+
+
+def test_get_tasks_buffers_cifar_out_of_index() -> None:
+    benchmark = SplitCIFAR10(n_experiences=5, return_task_id=True)
+
+    masks = {}
+    masks[0] = np.arange(10001)
+    masks[1] = np.arange(10000)
+    masks[2] = np.arange(10000)
+    masks[3] = np.arange(10000)
+
+    with pytest.raises(IndexError):
+        task_buffers = get_tasks_buffers(benchmark, masks)  # noqa: F841
