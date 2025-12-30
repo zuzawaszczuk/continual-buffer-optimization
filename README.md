@@ -11,9 +11,9 @@ src/
 │   └── strategy.py           # CL strategy with custom replay buffer
 ├── optimizers/
 │   ├── __init__.py
-│   ├── optimizer.py      # Base class
-│   ├── random_search.py  # RandomSearch class
-│   └── hill_climbing.py  # HillClimbing class
+│   ├── optimizer.py          # Base class
+│   ├── random_search.py      # RandomSearch class
+│   └── hill_climbing.py      # HillClimbing class
 ├── tests/
 │   └── test_benchmark.py  
 ├── config.py                 # Pydantic structure of config
