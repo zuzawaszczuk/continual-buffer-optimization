@@ -6,10 +6,14 @@
 src/
 ├── objective/
 │   ├── __init__.py
-│   ├── function.py           # TODO: Objective functions
+│   ├── function.py           # Function class for evaluation
 │   ├── manage_benchmark.py   # Functions to manage custom datasets
 │   └── strategy.py           # CL strategy with custom replay buffer
-├── optimizers/               # TODO: optimizers
+├── optimizers/
+│   ├── __init__.py
+│   ├── optimizer.py      # Base class
+│   ├── random_search.py  # RandomSearch class
+│   └── hill_climbing.py  # HillClimbing class
 ├── tests/
 │   └── test_benchmark.py  
 ├── config.py                 # Pydantic structure of config
