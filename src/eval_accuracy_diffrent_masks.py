@@ -2,9 +2,9 @@ import numpy as np
 import torch
 import yaml
 
+from config import Config
 from objective import Function
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
-from utils.config import Config
 
 torch.backends.cudnn.benchmark = True
 torch.set_float32_matmul_precision("high")

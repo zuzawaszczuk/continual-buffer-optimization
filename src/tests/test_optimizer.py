@@ -1,32 +1,35 @@
-# import numpy as np
-# import yaml
+import numpy as np
+import pytest
+import yaml
 
-# from config import Config
-# from objective.manage_benchmark import get_benchmark
-# from optimizers.optimizer import Optimizer
+from config import Config
+from objective.manage_benchmark import get_benchmark
+from optimizers import RandomSearch
 
 
-# def test_create_random_solution():
-#     with open("test_config.yaml", "r") as file:
-#         data = yaml.safe_load(file)
+@pytest.fixture
+def test_optimizer() -> RandomSearch:
+    with open("src/tests/test_config.yaml", "r") as file:
+        data = yaml.safe_load(file)
 
-#     config = Config(**data)
+    config = Config(**data)
+    benchmark = get_benchmark(config.dataset)
+    return RandomSearch(benchmark, config.model, config.strategies[0])
 
-#     benchmark = get_benchmark(config.dataset)
 
-#     op = Optimizer(benchmark, config.model, config.strategies[0])
-#     solution = op._create_random_solution()
+def test_create_random_solution(test_optimizer: RandomSearch) -> None:
+    solution = test_optimizer._create_random_solution()
 
-#     assert isinstance(solution, dict)
+    assert isinstance(solution, dict)
 
-#     assert len(solution) == len(4)
+    assert len(solution) == 4
 
-#     for task_id, mask in solution.items():
-#         assert isinstance(mask, np.ndarray)
+    for task_id, mask in solution.items():
+        assert isinstance(mask, np.ndarray)
 
-#         assert len(mask) == 500
+        assert len(mask) == 100
 
-#         assert len(mask) == len(set(mask))
+        assert len(mask) == len(set(mask))
 
-#         assert mask.min() >= 0
-#         assert mask.max() < op.task_sizes[task_id]
+        assert mask.min() >= 0
+        assert mask.max() < test_optimizer.task_sizes[task_id]

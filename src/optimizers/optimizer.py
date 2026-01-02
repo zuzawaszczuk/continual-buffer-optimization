@@ -4,8 +4,8 @@ from typing import Dict, Tuple
 import numpy as np
 from avalanche.benchmarks import NCScenario
 
+from config import HyperparamStrategyConfig, ModelConfig
 from objective.function import Function
-from utils.config import HyperparamStrategyConfig, ModelConfig
 
 
 class Optimizer(ABC):

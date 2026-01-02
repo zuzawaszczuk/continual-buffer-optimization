@@ -10,7 +10,7 @@ from avalanche.training.plugins import EvaluationPlugin
 from torch.nn import CrossEntropyLoss, MSELoss
 from torch.optim import SGD, Adam
 
-from utils.config import ModelConfig
+from config import ModelConfig
 
 from .strategy import OptimizedBufferStrategy
 
