@@ -18,23 +18,7 @@ model:
   batch: 128
 
 strategies:
-  - name: "HillClimbing"
-    n_calls: 50
-    params: {
-      restart: 3
-    } 
-  - name: "RandomSearch"
+  - name: "TestSTrategy"
     buffer_size: 500
     n_calls: 50
     params: {}
-  - name: "Genetic"
-    buffer_size: 
-    n_calls: 50
-    params: {
-      population: 20,
-      mutation_rate: 0.1,
-      elite_size: 2,
-      tournament_size: 2
-    }
-      
-

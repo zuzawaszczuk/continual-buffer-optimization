@@ -26,6 +26,7 @@ class ModelConfig(BaseModel):
 
 class HyperparamStrategyConfig(BaseModel):
     name: str
+    buffer_size: int
     n_calls: int
     params: Dict[str, Any]
 

@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Tuple
+from typing import Dict, Tuple
 import numpy as np
 from avalanche.benchmarks import NCScenario
-from config import ModelConfig
+from config import ModelConfig, HyperparamStrategyConfig
 from objective.function import Function
 
 
@@ -11,18 +11,17 @@ class Optimizer(ABC):
         self,
         benchmark: NCScenario,
         model_config: ModelConfig,
-        hyperparams: Dict[str, Any],
+        hyperparams: HyperparamStrategyConfig,
     ):
         self.benchmark = benchmark
         self.model_config = model_config
-        self.hyperparams = hyperparams
 
         self.function = Function(self.benchmark, self.model_config)
         self.task_sizes = {
             i: len(exp.dataset)
             for i, exp in enumerate(self.benchmark.train_stream[:-1])
         }
-        self.buffer_size = self.hyperparams.get("buffer_size_per_task", 500)
+        self.buffer_size = hyperparams.buffer_size
 
     @abstractmethod
     def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:
@@ -34,3 +33,11 @@ class Optimizer(ABC):
     def _create_random_mask(self, total_size: int, n_ones: int) -> np.ndarray:
         indices = np.random.choice(total_size, n_ones, replace=False)
         return indices
+
+    def _create_random_solution(self) -> Dict[int, np.ndarray]:
+        solution = {
+            i: self._create_random_mask(self.task_sizes[i], self.buffer_size)
+            for i, exp in enumerate(self.benchmark.train_stream[:-1])
+        }
+
+        return solution
