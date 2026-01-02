@@ -1,9 +1,9 @@
 import torch
 import yaml
 
-from config import Config
 from objective.manage_benchmark import get_benchmark
 from optimizers import get_optimizer
+from utils.config import Config
 
 torch.backends.cudnn.benchmark = True
 torch.set_float32_matmul_precision("high")
@@ -25,7 +25,7 @@ for strategy_conf in config.strategies:
     optimizer = OptimizerClass(
         benchmark=benchmark,
         model_config=config.model,
-        hyperparams=strategy_conf.params | {"n_calls": strategy_conf.n_calls},
+        hyperparams=strategy_conf,
     )
 
     best_score, best_masks = optimizer.optimize()

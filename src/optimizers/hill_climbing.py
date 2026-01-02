@@ -1,6 +1,8 @@
-import numpy as np
 from typing import Dict, Tuple
+
+import numpy as np
 from tqdm import tqdm
+
 from .optimizer import Optimizer
 
 

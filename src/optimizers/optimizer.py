@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Tuple
+
 import numpy as np
 from avalanche.benchmarks import NCScenario
-from config import ModelConfig, HyperparamStrategyConfig
+
 from objective.function import Function
+from utils.config import HyperparamStrategyConfig, ModelConfig
 
 
 class Optimizer(ABC):
@@ -22,6 +24,7 @@ class Optimizer(ABC):
             for i, exp in enumerate(self.benchmark.train_stream[:-1])
         }
         self.buffer_size = hyperparams.buffer_size
+        self.n_calls = hyperparams.n_calls
 
     @abstractmethod
     def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:

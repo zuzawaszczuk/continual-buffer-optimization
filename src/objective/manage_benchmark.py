@@ -12,7 +12,7 @@ from avalanche.benchmarks.classic import (
 from avalanche.benchmarks.scenarios.dataset_scenario import benchmark_from_datasets
 from avalanche.benchmarks.utils import as_classification_dataset
 
-from config import DatasetConfig
+from utils.config import DatasetConfig
 
 
 def get_benchmark(dataset_config: DatasetConfig) -> NCScenario:

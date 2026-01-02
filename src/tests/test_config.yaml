@@ -1,5 +1,5 @@
 dataset: 
-  name: "SplitMNIST"
+  name: "SplitCIFAR10"
   n_tasks: 5
   eval_ratio: 0.2
   test_ratio: 0.2
