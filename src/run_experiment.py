@@ -1,3 +1,5 @@
+import logging
+
 import torch
 import yaml
 
@@ -7,6 +9,13 @@ from optimizers import get_optimizer
 
 torch.backends.cudnn.benchmark = True
 torch.set_float32_matmul_precision("high")
+
+fh = logging.FileHandler("results.txt")
+fh.setLevel(logging.DEBUG)
+logger = logging.getLogger("GA_logger")
+logger.setLevel(logging.INFO)
+logger.addHandler(fh)
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -26,6 +35,7 @@ for strategy_conf in config.strategies:
         benchmark=benchmark,
         model_config=config.model,
         hyperparams=strategy_conf,
+        logger=logger,
     )
 
     best_score, best_masks = optimizer.optimize()

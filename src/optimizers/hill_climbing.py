@@ -1,16 +1,27 @@
-from typing import Dict, Tuple
+import logging
+from typing import Dict, Tuple, TypeAlias
 
 import numpy as np
+from avalanche.benchmarks import NCScenario
 from tqdm import tqdm
+
+from config import HyperparamStrategyConfig, ModelConfig
 
 from .optimizer import Optimizer
 
+Solution: TypeAlias = Dict[int, np.ndarray]
+
 
 class HillClimbing(Optimizer):
-    def __init__(self, benchmark, model_config, hyperparams):
-        super().__init__(benchmark, model_config, hyperparams)
-        self.n_calls = self.hyperparams.get("n_calls", 50)
-        self.restarts = self.hyperparams.get("restart", 1)
+    def __init__(
+        self,
+        benchmark: NCScenario,
+        model_config: ModelConfig,
+        hyperparams: HyperparamStrategyConfig,
+        logger: logging.Logger,
+    ):
+        super().__init__(benchmark, model_config, hyperparams, logger)
+        self.restarts = self.params.get("restart", 1)
         self.steps_per_restart = max(1, self.n_calls // self.restarts)
 
     def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:

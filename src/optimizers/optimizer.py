@@ -1,11 +1,14 @@
+import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple
+from typing import Dict, Tuple, TypeAlias
 
 import numpy as np
 from avalanche.benchmarks import NCScenario
 
 from config import HyperparamStrategyConfig, ModelConfig
 from objective.function import Function
+
+Solution: TypeAlias = Dict[int, np.ndarray]
 
 
 class Optimizer(ABC):
@@ -14,9 +17,12 @@ class Optimizer(ABC):
         benchmark: NCScenario,
         model_config: ModelConfig,
         hyperparams: HyperparamStrategyConfig,
+        logger: logging.Logger,
     ):
         self.benchmark = benchmark
         self.model_config = model_config
+        self.params = hyperparams.params
+        self.logger = logger
 
         self.function = Function(self.benchmark, self.model_config)
         self.task_sizes = {
@@ -27,17 +33,17 @@ class Optimizer(ABC):
         self.n_calls = hyperparams.n_calls
 
     @abstractmethod
-    def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:
+    def optimize(self) -> Tuple[float, Solution]:
         pass
 
-    def evaluate(self, masks: Dict[int, np.ndarray]) -> float:
+    def evaluate(self, masks: Solution) -> float:
         return self.function(masks)
 
     def _create_random_mask(self, total_size: int, n_ones: int) -> np.ndarray:
         indices = np.random.choice(total_size, n_ones, replace=False)
         return indices
 
-    def _create_random_solution(self) -> Dict[int, np.ndarray]:
+    def _create_random_solution(self) -> Solution:
         solution = {
             i: self._create_random_mask(self.task_sizes[i], self.buffer_size)
             for i, exp in enumerate(self.benchmark.train_stream[:-1])

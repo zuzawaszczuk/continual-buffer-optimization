@@ -1,9 +1,11 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, TypeAlias
 
 import numpy as np
 from tqdm import tqdm
 
 from .optimizer import Optimizer
+
+Solution: TypeAlias = Dict[int, np.ndarray]
 
 
 class RandomSearch(Optimizer):

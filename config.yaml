@@ -31,8 +31,10 @@ strategies:
     buffer_size: 
     n_calls: 50
     params: {
-      population: 20,
+      epochs: 10,
+      population: 5,
       mutation_rate: 0.1,
+      reproduce_rate: 0.1,
       elite_size: 2,
       tournament_size: 2
     }
