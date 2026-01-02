@@ -18,7 +18,7 @@ class GeneticAlgorithm(Optimizer):
         benchmark: NCScenario,
         model_config: ModelConfig,
         hyperparams: HyperparamStrategyConfig,
-        logger: Logger,
+        logger: Logger = Logger("default"),
     ):
         super().__init__(benchmark, model_config, hyperparams, logger)
         self.population_size = self.params.get("population", 20)
@@ -109,5 +109,14 @@ class GeneticAlgorithm(Optimizer):
             self.population[idx] = elite
             self.function_cache[idx] = cache
 
+    def mutation(self, masks: Solution) -> Solution:
+        idx_mask = np.random.choice(list(masks.keys()))
 
-# mutacja
+        all_indices = np.arange(self.task_sizes[idx_mask])
+        available = np.setdiff1d(all_indices, masks[idx_mask])
+
+        idx_to_change = np.random.randint(0, len(masks[idx_mask]) - 1)
+
+        masks[idx_mask][idx_to_change] = np.random.choice(available)
+
+        return masks

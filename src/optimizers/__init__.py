@@ -3,13 +3,14 @@ from typing import Type
 from .hill_climbing import HillClimbing
 from .optimizer import Optimizer
 from .random_search import RandomSearch
+from .genetic_algorithm import GeneticAlgorithm
 
 __all__ = ["HillClimbing", "RandomSearch"]
 
 STRATEGY_MAP = {
     "RandomSearch": RandomSearch,
-    # "HillClimbing": HillClimbing,
-    # "Genetic": GeneticOptimizer,
+    "HillClimbing": HillClimbing,
+    "Genetic": GeneticAlgorithm,
     # "PBIL": PBILOptimizer,
     # "Heuristic": HeuristicOptimizer
 }

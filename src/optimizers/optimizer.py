@@ -1,5 +1,5 @@
-import logging
 from abc import ABC, abstractmethod
+from logging import Logger
 from typing import Dict, Tuple, TypeAlias
 
 import numpy as np
@@ -17,7 +17,7 @@ class Optimizer(ABC):
         benchmark: NCScenario,
         model_config: ModelConfig,
         hyperparams: HyperparamStrategyConfig,
-        logger: logging.Logger,
+        logger: Logger = Logger("default"),
     ):
         self.benchmark = benchmark
         self.model_config = model_config
