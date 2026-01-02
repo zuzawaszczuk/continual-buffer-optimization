@@ -45,4 +45,20 @@ class HillClimbing(Optimizer):
         return best_global_score, best_global_masks
 
     def get_neighbor(self, masks: Dict[int, np.ndarray]):
-        pass
+        neighbor = {}
+        for task_id, mask in masks.items():
+            new_mask = mask.copy()
+            swaps = max(1, int(0.05 * self.buffer_size))
+            total_size = self.task_sizes[task_id]
+            all_indices = np.arange(total_size)
+            available = np.setdiff1d(all_indices, new_mask)
+
+            if len(available) > 0:
+                swap_out = np.random.choice(new_mask, size=swaps, replace=False)
+                swap_in = np.random.choice(available, size=swaps, replace=False)
+
+                new_mask[np.isin(new_mask, swap_out)] = swap_in
+
+            neighbor[task_id] = new_mask
+
+        return neighbor

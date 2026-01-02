@@ -18,7 +18,8 @@ class RandomSearch(Optimizer):
                 current_masks[task_id] = self._create_random_mask(
                     size, self.buffer_size
                 )
-
+                # print("Current mask for task", task_id)
+                # print(current_masks[task_id])
             score = self.evaluate(current_masks)
 
             if score > best_score:

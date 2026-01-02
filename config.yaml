@@ -18,11 +18,11 @@ model:
   batch: 128
 
 strategies:
-  # - name: "HillClimbing"
-  #   n_calls: 50
-  #   params: {
-  #     restart: 3
-  #   } 
+  - name: "HillClimbing"
+    n_calls: 50
+    params: {
+      restart: 3
+    } 
   - name: "RandomSearch"
     n_calls: 50
     params: {}
