@@ -1,13 +1,13 @@
 from typing import Type
 
+from .genetic_algorithm import GeneticAlgorithm
 from .hill_climbing import HillClimbing
 from .optimizer import Optimizer
 from .random_search import RandomSearch
-from .genetic_algorithm import GeneticAlgorithm
 
 __all__ = ["HillClimbing", "RandomSearch"]
 
-STRATEGY_MAP = {
+STRATEGY_MAP: dict[str, Type[Optimizer]] = {
     "RandomSearch": RandomSearch,
     "HillClimbing": HillClimbing,
     "Genetic": GeneticAlgorithm,

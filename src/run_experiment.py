@@ -4,18 +4,11 @@ import torch
 import yaml
 
 from config import Config
-from objective.manage_benchmark import get_benchmark
+from objective.manage_benchmark import get_benchmark, print_dataset_stats
 from optimizers import get_optimizer
 
 torch.backends.cudnn.benchmark = True
 torch.set_float32_matmul_precision("high")
-
-fh = logging.FileHandler("results.txt")
-fh.setLevel(logging.DEBUG)
-logger = logging.getLogger("GA_logger")
-logger.setLevel(logging.INFO)
-logger.addHandler(fh)
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -24,10 +17,17 @@ with open("config.yaml", "r") as file:
 
 config = Config(**data)
 
+fh = logging.FileHandler(f"{config.dataset.name}_results.txt")
+fh.setLevel(logging.DEBUG)
+logger = logging.getLogger("GA_logger")
+logger.setLevel(logging.INFO)
+logger.addHandler(fh)
+
 benchmark = get_benchmark(config.dataset)
+print_dataset_stats(benchmark)
 
 for strategy_conf in config.strategies:
-    print(f"Running strategy: {strategy_conf.name}")
+    logger.info(f"Running strategy: {strategy_conf.name}")
 
     OptimizerClass = get_optimizer(strategy_conf.name)
 
@@ -40,4 +40,4 @@ for strategy_conf in config.strategies:
 
     best_score, best_masks = optimizer.optimize()
 
-    print(f"Best accuracy for {strategy_conf.name}: {best_score}")
+    logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")

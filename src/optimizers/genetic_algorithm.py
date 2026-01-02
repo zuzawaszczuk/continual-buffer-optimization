@@ -28,10 +28,15 @@ class GeneticAlgorithm(Optimizer):
         self.function_cache: list[float | None] = [None] * self.population_size
         self.n_elite = self.params.get("n_elite", 1)
         self.epochs = self.params.get("epochs", 1)
+        self.calls_used = 0
 
     def optimize(self) -> Tuple[float, Solution]:
         self.calculate()
         for _ in range(self.epochs):
+
+            if self.calls_used >= self.n_calls:
+                break
+
             elite_indices = np.argsort(self.function_cache)[-self.n_elite :]  # type: ignore[arg-type]
             elites = [self.population[i] for i in elite_indices]
             elite_cache = [self.function_cache[i] for i in elite_indices]
@@ -60,7 +65,32 @@ class GeneticAlgorithm(Optimizer):
                 f"Fucntion: {self.function_cache[best_idx]} Solution: {self.population[best_idx]}"
             )
 
-        return self.function_cache[best_idx], self.population[best_idx]
+        value = self.function_cache[best_idx]
+        assert value is not None
+
+        return value, self.population[best_idx]
+
+    def calculate(self) -> None:
+        for i in range(len(self.population)):
+            if self.function_cache[i] is None and self.calls_used < self.n_calls:
+                self.calls_used += 1
+                self.function_cache[i] = self.evaluate(self.population[i])
+
+    def tournament_selection(
+        self, k: int = 2
+    ) -> Tuple[List[Solution], List[float | None]]:
+        new_cache: List[None | float] = [None] * self.population_size
+        new_population = []
+
+        for i in range(self.population_size):
+            tournament_indices = np.random.choice(
+                self.population_size, k, replace=False
+            )
+            best_idx = max(tournament_indices, key=lambda idx: self.function_cache[idx])
+            new_population.append(self.population[best_idx])
+            new_cache[i] = self.function_cache[best_idx]
+
+        return new_population, new_cache
 
     def reproduce(
         self, solution_a: Solution, solution_b: Solution
@@ -81,34 +111,6 @@ class GeneticAlgorithm(Optimizer):
 
         return child_a, child_b
 
-    def calculate(self) -> None:
-        for i in range(len(self.population)):
-            if self.function_cache[i] is None:
-                self.function_cache[i] = self.evaluate(self.population[i])
-
-    def tournament_selection(
-        self, k: int = 2
-    ) -> Tuple[List[Solution], List[float | None]]:
-        new_cache: List[None | float] = [None] * self.population_size
-        new_population = []
-
-        for i in range(self.population_size):
-            tournament_indices = np.random.choice(
-                self.population_size, k, replace=False
-            )
-            best_idx = max(tournament_indices, key=lambda idx: self.function_cache[idx])
-            new_population.append(self.population[best_idx])
-            new_cache[i] = self.function_cache[best_idx]
-
-        return new_population, new_cache
-
-    def elite_selection(self, elites: List[Solution], elite_cache: List[float]) -> None:
-        indices = random.sample(range(self.population_size), len(elites))
-
-        for elite, cache, idx in zip(elites, elite_cache, indices):
-            self.population[idx] = elite
-            self.function_cache[idx] = cache
-
     def mutation(self, masks: Solution) -> Solution:
         idx_mask = np.random.choice(list(masks.keys()))
 
@@ -120,3 +122,10 @@ class GeneticAlgorithm(Optimizer):
         masks[idx_mask][idx_to_change] = np.random.choice(available)
 
         return masks
+
+    def elite_selection(self, elites: List[Solution], elite_cache: List[float]) -> None:
+        indices = random.sample(range(self.population_size), len(elites))
+
+        for elite, cache, idx in zip(elites, elite_cache, indices):
+            self.population[idx] = elite
+            self.function_cache[idx] = cache

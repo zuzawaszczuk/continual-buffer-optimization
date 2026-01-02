@@ -1,3 +1,6 @@
+import logging
+from logging import Logger
+
 from avalanche.benchmarks import (
     NCScenario,
     benchmark_with_validation_stream,
@@ -41,27 +44,33 @@ def calculate_mask_length(benchmark: NCScenario) -> int:
     return sum(len(exp.dataset) for exp in benchmark.train_stream[:-1])
 
 
-def print_dataset_stats(benchmark: NCScenario) -> None:
+def print_dataset_stats(benchmark: NCScenario, logger: Logger | None = None) -> None:
+    if logger is None:
+        logger = logging.getLogger("dataset_stats_logger")
+        logger.setLevel(logging.INFO)
+        console_handler = logging.StreamHandler()
+        logger.addHandler(console_handler)
+
     train_stream = benchmark.train_stream
     val_stream = benchmark.valid_stream
     test_stream = benchmark.test_stream
 
-    print("\n=== Benchmark Stats ===\n")
+    logger.info("\n=== Benchmark Stats ===\n")
     for experience in train_stream:
         task_id = experience.current_experience
         classes = experience.classes_in_this_experience
-        print(f"Task {task_id} | Classes in this task: {classes}")
+        logger.info(f"Task {task_id} | Classes in this task: {classes}")
 
         train_dataset = experience.dataset
-        print(f"  Training examples: {len(train_dataset)}")
+        logger.info(f"  Training examples: {len(train_dataset)}")
 
         val_dataset = val_stream[task_id].dataset
-        print(f"  Validation examples: {len(val_dataset)}")
+        logger.info(f"  Validation examples: {len(val_dataset)}")
 
         test_dataset = test_stream[task_id].dataset
-        print(f"  Test examples: {len(test_dataset)}")
+        logger.info(f"  Test examples: {len(test_dataset)}")
 
-        print("-" * 50)
+        logger.info("-" * 50)
 
 
 def factory_benchmark(name: str, seed: int) -> NCScenario:
