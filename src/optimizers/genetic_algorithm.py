@@ -32,7 +32,8 @@ class GeneticAlgorithm(Optimizer):
 
     def optimize(self) -> Tuple[float, Solution]:
         self.calculate()
-        for _ in range(self.epochs):
+        for epoch in range(self.epochs):
+            self.logger.info(f"Epoch: {epoch}")
 
             if self.calls_used >= self.n_calls:
                 break
@@ -60,10 +61,9 @@ class GeneticAlgorithm(Optimizer):
             self.calculate()
             self.elite_selection(elites, elite_cache)
 
-            best_idx = np.argmax(self.function_cache)  # type: ignore[arg-type]
-            self.logger.info(
-                f"Fucntion: {self.function_cache[best_idx]} Solution: {self.population[best_idx]}"
-            )
+            values = np.array([-np.inf if v is None else v for v in self.function_cache])
+
+            best_idx = np.argmax(values)
 
         value = self.function_cache[best_idx]
         assert value is not None

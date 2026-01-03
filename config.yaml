@@ -14,26 +14,26 @@ model:
   lr: 0.01
   dropout: 0.5
   criterion: "CrossEntropyLoss"
-  epochs: 2
+  epochs: 10
   batch: 128
 
 strategies:
   - name: "HillClimbing"
     buffer_size: 500
-    n_calls: 10
+    n_calls: 100
     params: {
       restart: 5
     } 
   - name: "RandomSearch"
     buffer_size: 500
-    n_calls: 10
+    n_calls: 100
     params: {}
   - name: "Genetic"
     buffer_size: 500
-    n_calls: 10
+    n_calls: 100
     params: {
-      epochs: 2,
-      population: 5,
+      epochs: 10,
+      population: 40,
       mutation_rate: 0.1,
       reproduce_rate: 0.1,
       elite_size: 2,

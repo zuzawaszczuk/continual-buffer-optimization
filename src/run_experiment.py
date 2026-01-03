@@ -1,5 +1,5 @@
 import logging
-
+import datetime
 import torch
 import yaml
 
@@ -17,17 +17,20 @@ with open("config.yaml", "r") as file:
 
 config = Config(**data)
 
-fh = logging.FileHandler(f"{config.dataset.name}_results.txt")
+start_time = datetime.datetime.now()
+fh = logging.FileHandler(f"{config.dataset.name}_results_10epoch_{start_time.strftime('%Y-%m-%d %H:%M:%S')}.txt")
 fh.setLevel(logging.DEBUG)
 logger = logging.getLogger("GA_logger")
 logger.setLevel(logging.INFO)
 logger.addHandler(fh)
 
+logger.info(config.model_dump_json(indent=4))
 benchmark = get_benchmark(config.dataset)
 print_dataset_stats(benchmark)
 
 for strategy_conf in config.strategies:
-    logger.info(f"Running strategy: {strategy_conf.name}")
+    start_time = datetime.datetime.now()
+    logger.info(f"Running strategy: {strategy_conf.name} | Start time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
     OptimizerClass = get_optimizer(strategy_conf.name)
 
@@ -41,3 +44,4 @@ for strategy_conf in config.strategies:
     best_score, best_masks = optimizer.optimize()
 
     logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
+    logger.info(f"Best solution for {best_masks}")
