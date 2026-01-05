@@ -32,10 +32,12 @@ class GeneticAlgorithm(Optimizer):
 
     def optimize(self) -> Tuple[float, Solution]:
         self.calculate()
+        best_idx = 0
+
         for epoch in range(self.epochs):
             self.logger.info(f"Epoch: {epoch}")
 
-            if self.calls_used >= self.n_calls:
+            if self.calls_used > self.n_calls:
                 break
 
             elite_indices = np.argsort(self.function_cache)[-self.n_elite :]  # type: ignore[arg-type]

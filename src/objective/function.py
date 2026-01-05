@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any
 
 import numpy as np
 import torch
@@ -73,8 +73,12 @@ class Function:
         for experience in self.benchmark.train_stream:
             cl_strategy.train(experience)
 
-        metrics = cl_strategy.eval(self.benchmark.valid_stream)
+        metrics = self.eval(cl_strategy)
         return float(metrics["Top1_Acc_Stream/eval_phase/valid_stream"])
+
+    def eval(self, cl_strategy: OptimizedBufferStrategy) -> Any:
+        metrics = cl_strategy.eval(self.benchmark.valid_stream)
+        return metrics
 
     def get_tasks_buffers(
         self, masks: Dict[int, np.ndarray]

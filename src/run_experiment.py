@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 import torch
 import yaml
+import json
 
 from config import Config
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
@@ -34,6 +35,7 @@ benchmark = get_benchmark(config.dataset)
 print_dataset_stats(benchmark)
 
 history_ecdf = pd.DataFrame()
+best_mask_per_strategy = {}
 
 for strategy_conf in config.strategies:
     start_time = datetime.datetime.now()
@@ -49,11 +51,17 @@ for strategy_conf in config.strategies:
         hyperparams=strategy_conf,
         logger=logger,
     )
-    history_ecdf[f"{strategy_conf.name}"] = optimizer.history
-
+    
     best_score, best_masks = optimizer.optimize()
 
-    logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
-    logger.info(f"Best solution for {best_masks}")
+    history_ecdf[f"{strategy_conf.name}"] = optimizer.history
+    best_mask_per_strategy[f"{strategy_conf.name}"] = best_masks
 
+    logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
+
+print(history_ecdf)
 plot_ecdf(history_ecdf, file_name)
+
+
+with open(f"{file_name}_masks.json", "w") as f:
+    json.dump(best_mask_per_strategy, f)
