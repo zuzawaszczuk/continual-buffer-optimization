@@ -61,7 +61,9 @@ class GeneticAlgorithm(Optimizer):
             self.calculate()
             self.elite_selection(elites, elite_cache)
 
-            values = np.array([-np.inf if v is None else v for v in self.function_cache])
+            values = np.array(
+                [-np.inf if v is None else v for v in self.function_cache]
+            )
 
             best_idx = np.argmax(values)
 

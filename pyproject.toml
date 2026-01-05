@@ -9,9 +9,12 @@ dependencies = [
     "black>=25.12.0",
     "isort>=7.0.0",
     "mypy>=1.19.1",
+    "pandas>=2.3.3",
     "pytest>=9.0.2",
     "ruff>=0.14.10",
+    "seaborn>=0.13.2",
     "types-pyyaml>=6.0.12.20250915",
+    "types-seaborn>=0.13.2.20251221",
     "types-tqdm>=4.67.0.20250809",
 ]
 

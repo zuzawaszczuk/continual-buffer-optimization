@@ -24,7 +24,7 @@ class HillClimbing(Optimizer):
         self.restarts = self.params.get("restart", 1)
         self.steps_per_restart = max(1, self.n_calls // self.restarts)
 
-    def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:
+    def optimize(self) -> Tuple[float, Solution]:
         best_global_score = -1.0
         best_global_masks = None
 
@@ -55,9 +55,10 @@ class HillClimbing(Optimizer):
                     best_global_masks = current_masks.copy()
                     pbar.set_postfix({"best": f"{best_global_score:.4f}"})
 
+        assert best_global_masks is not None
         return best_global_score, best_global_masks
 
-    def get_neighbor(self, masks: Dict[int, np.ndarray]):
+    def get_neighbor(self, masks: Dict[int, np.ndarray]) -> Solution:
         neighbor = {}
         for task_id, mask in masks.items():
             new_mask = mask.copy()

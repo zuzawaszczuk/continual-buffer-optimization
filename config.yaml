@@ -20,20 +20,20 @@ model:
 strategies:
   - name: "HillClimbing"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 10
     params: {
       restart: 5
     } 
   - name: "RandomSearch"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 10
     params: {}
   - name: "Genetic"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 10
     params: {
       epochs: 10,
-      population: 40,
+      population: 5,
       mutation_rate: 0.1,
       reproduce_rate: 0.1,
       elite_size: 2,

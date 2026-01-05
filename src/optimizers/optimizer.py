@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from logging import Logger
-from typing import Dict, Tuple, TypeAlias
+from typing import Dict, List, Tuple, TypeAlias
 
 import numpy as np
 from avalanche.benchmarks import NCScenario
@@ -31,13 +31,16 @@ class Optimizer(ABC):
         }
         self.buffer_size = hyperparams.buffer_size
         self.n_calls = hyperparams.n_calls
+        self.history: List[float] = []
 
     @abstractmethod
     def optimize(self) -> Tuple[float, Solution]:
         pass
 
     def evaluate(self, masks: Solution) -> float:
-        return self.function(masks)
+        value = self.function(masks)
+        self.history.append(value)
+        return value
 
     def _create_random_mask(self, total_size: int, n_ones: int) -> np.ndarray:
         indices = np.random.choice(total_size, n_ones, replace=False)

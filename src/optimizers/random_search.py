@@ -9,7 +9,7 @@ Solution: TypeAlias = Dict[int, np.ndarray]
 
 
 class RandomSearch(Optimizer):
-    def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:
+    def optimize(self) -> Tuple[float, Solution]:
         best_score = -1.0
         best_masks = None
 
@@ -22,4 +22,5 @@ class RandomSearch(Optimizer):
                 best_masks = current_masks.copy()
                 # print(f"New best random: {best_score}")
 
+        assert best_masks is not None
         return best_score, best_masks
