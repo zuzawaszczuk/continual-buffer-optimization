@@ -1,5 +1,5 @@
 import datetime
-import json
+import numpy as np
 import logging
 
 import pandas as pd
@@ -22,7 +22,7 @@ with open("config.yaml", "r") as file:
 config = Config(**data)
 
 start_time = datetime.datetime.now()
-file_name = f"{config.dataset.name}_{start_time.strftime('%Y-%m-%d %H:%M:%S')}.txt"
+file_name = f"{config.dataset.name}_{start_time.strftime('%Y-%m-%d %H:%M:%S')}"
 
 fh = logging.FileHandler(f"{file_name}.txt")
 fh.setLevel(logging.DEBUG)
@@ -62,6 +62,4 @@ for strategy_conf in config.strategies:
 print(history_ecdf)
 plot_ecdf(history_ecdf, file_name)
 
-
-with open(f"{file_name}_masks.json", "w") as f:
-    json.dump(best_mask_per_strategy, f)
+np.savez(f"{file_name}_masks.npz", **best_mask_per_strategy)

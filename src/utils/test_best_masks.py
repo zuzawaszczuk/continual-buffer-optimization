@@ -1,4 +1,6 @@
-import json
+import numpy as np
 
-with open("best_masks.json", "r") as f:
-    best_mask_per_strategy = json.load(f)
+loaded = np.load("SplitMNIST_2026-01-05 23:58:58_masks.npz", allow_pickle=True)
+best_mask_per_strategy = {k: loaded[k] for k in loaded}
+
+print(best_mask_per_strategy)

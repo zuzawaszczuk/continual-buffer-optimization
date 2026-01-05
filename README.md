@@ -16,9 +16,14 @@ src/
 │   └── hill_climbing.py      # HillClimbing class
 ├── tests/
 │   └── test_benchmark.py  
+├── utils/
+│   ├── create_ecdf.py        # Create plot image with ECDF curve for each algorithm
+│   ├── showcase_function.py  # Shows how diffrent function value is for diffrent buffors
+│   └── test_best_masks.py    # TODO: compare best masks from optimizers with heuristic one on test dataset
 ├── config.py                 # Pydantic structure of config
 └── run_experiment.py         # Script to run experiments
 ```
+src/utils/src/utils/eval_accuracy_diffrent_masks.py
 
 ## Linting code
 
@@ -37,3 +42,5 @@ PYTHONPATH=src pytest src/tests/
 `
 python3 src/run_experiment.py 
 `
+
+## Test objective function with continual learning for two example masks
