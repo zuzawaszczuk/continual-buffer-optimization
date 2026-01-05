@@ -1,10 +1,10 @@
 import datetime
+import json
 import logging
 
 import pandas as pd
 import torch
 import yaml
-import json
 
 from config import Config
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
@@ -51,7 +51,7 @@ for strategy_conf in config.strategies:
         hyperparams=strategy_conf,
         logger=logger,
     )
-    
+
     best_score, best_masks = optimizer.optimize()
 
     history_ecdf[f"{strategy_conf.name}"] = optimizer.history

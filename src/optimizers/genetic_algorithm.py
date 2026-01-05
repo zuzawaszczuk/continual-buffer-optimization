@@ -67,7 +67,7 @@ class GeneticAlgorithm(Optimizer):
                 [-np.inf if v is None else v for v in self.function_cache]
             )
 
-            best_idx = np.argmax(values)
+            best_idx = int(np.argmax(values))
 
         value = self.function_cache[best_idx]
         assert value is not None

@@ -1,4 +1,5 @@
 from typing import Any
+
 from .function import Function
 from .strategy import OptimizedBufferStrategy
 
