@@ -15,31 +15,31 @@
         "lr": 0.01,
         "dropout": 0.5,
         "criterion": "CrossEntropyLoss",
-        "epochs": 10,
+        "epochs": 4,
         "batch": 128
     },
     "strategies": [
         {
             "name": "HillClimbing",
             "buffer_size": 500,
-            "n_calls": 2,
+            "n_calls": 100,
             "params": {
-                "restart": 1
+                "restart": 20
             }
         },
         {
             "name": "RandomSearch",
             "buffer_size": 500,
-            "n_calls": 2,
+            "n_calls": 100,
             "params": {}
         },
         {
             "name": "Genetic",
             "buffer_size": 500,
-            "n_calls": 2,
+            "n_calls": 100,
             "params": {
-                "epochs": 1,
-                "population": 2,
+                "epochs": 10,
+                "population": 30,
                 "mutation_rate": 0.1,
                 "reproduce_rate": 0.1,
                 "elite_size": 2,
@@ -48,10 +48,13 @@
         }
     ]
 }
-Running strategy: HillClimbing | Start time: 2026-01-05 23:58:59
-Best accuracy for HillClimbing: 0.8104368122707569
-Running strategy: RandomSearch | Start time: 2026-01-06 00:01:10
-Best accuracy for RandomSearch: 0.8025175058352785
-Running strategy: Genetic | Start time: 2026-01-06 00:03:16
+Running strategy: HillClimbing | Start time: 2026-01-06 11:00:28
+Best accuracy for HillClimbing: 0.7868456152050683
+Running strategy: RandomSearch | Start time: 2026-01-06 11:53:03
+Best accuracy for RandomSearch: 0.7830943647882628
+Running strategy: Genetic | Start time: 2026-01-06 12:37:44
 Epoch: 0
-Best accuracy for Genetic: 0.8289429809936646
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Best accuracy for Genetic: 0.7780926975658553
