@@ -15,7 +15,7 @@ class RandomSearch(Optimizer):
 
         for _ in tqdm(range(self.n_calls)):
             current_masks = self._create_random_solution()
-            score = self.evaluate(current_masks)
+            score = self._evaluate(current_masks)
 
             if score > best_score:
                 best_score = score

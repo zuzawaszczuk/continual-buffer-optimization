@@ -1,6 +1,8 @@
+import copy
 import random
+from dataclasses import dataclass
 from logging import Logger
-from typing import Dict, List, Tuple, TypeAlias
+from typing import Dict, List, Optional, Tuple, TypeAlias
 
 import numpy as np
 from avalanche.benchmarks import NCScenario
@@ -10,6 +12,12 @@ from config import HyperparamStrategyConfig, ModelConfig
 from .optimizer import Optimizer
 
 Solution: TypeAlias = Dict[int, np.ndarray]
+
+
+@dataclass
+class Individual:
+    masks: Solution
+    fitness: Optional[float] = None
 
 
 class GeneticAlgorithm(Optimizer):
@@ -22,79 +30,61 @@ class GeneticAlgorithm(Optimizer):
     ):
         super().__init__(benchmark, model_config, hyperparams, logger)
         self.population_size = self.params.get("population", 20)
-        self.population: List[Solution] = [
-            self._create_random_solution() for _ in range(self.population_size)
+        self.calls_used = 0
+        self.population: List[Individual] = [
+            self.create_random_individual() for _ in range(self.population_size)
         ]
-        self.function_cache: list[float | None] = [None] * self.population_size
         self.n_elite = self.params.get("n_elite", 1)
         self.epochs = self.params.get("epochs", 1)
-        self.calls_used = 0
 
     def optimize(self) -> Tuple[float, Solution]:
-        self.calculate()
-        best_idx = 0
-
         for epoch in range(self.epochs):
             self.logger.info(f"Epoch: {epoch}")
 
             if self.calls_used >= self.n_calls:
                 break
 
-            elite_indices = np.argsort(self.function_cache)[-self.n_elite :]  # type: ignore[arg-type]
-            elites = [self.population[i] for i in elite_indices]
-            elite_cache = [self.function_cache[i] for i in elite_indices]
+            new_population = self.tournament_selection()
+            new_population = self.reproduction(new_population)
 
-            self.population, self.function_cache = self.tournament_selection(
-                self.params.get("tournament_size", 2)
-            )
+            for ind in new_population:
+                if np.random.uniform(0, 1) < self.params.get("mutation_rate", 0.1):
+                    ind.masks = self.mutation(ind.masks)
+                    ind.fitness = self.evaluate(ind.masks)
 
-            for i in range(0, len(self.population) - 1, 2):
-                if np.random.uniform(0, 1) > self.params.get("reproduce_rate", 0.1):
-                    self.population[i], self.population[i + 1] = self.reproduce(
-                        self.population[i], self.population[i + 1]
-                    )
-                    self.function_cache[i], self.function_cache[i + 1] = None, None
+            self.population, best_ind = self.elite_selection(new_population)
 
-            for i in range(len(self.population)):
-                if np.random.uniform(0, 1) > self.params.get("mutation_rate", 0.1):
-                    self.population[i] = self.mutation(self.population[i])
-                    self.function_cache[i] = None
+        assert isinstance(best_ind.fitness, float)
+        return best_ind.fitness, best_ind.masks
 
-            self.calculate()
-            self.elite_selection(elites, elite_cache)
-
-            values = np.array(
-                [-np.inf if v is None else v for v in self.function_cache]
-            )
-
-            best_idx = int(np.argmax(values))
-
-        value = self.function_cache[best_idx]
-        assert value is not None
-
-        return value, self.population[best_idx]
-
-    def calculate(self) -> None:
-        for i, individual in enumerate(self.population):
-            if self.function_cache[i] is None and self.calls_used < self.n_calls:
-                self.calls_used += 1
-                self.function_cache[i] = self.evaluate(individual)
-
-    def tournament_selection(
-        self, k: int = 2
-    ) -> Tuple[List[Solution], List[float | None]]:
-        new_cache: List[None | float] = [None] * self.population_size
+    def tournament_selection(self, k: int = 2) -> List[Individual]:
         new_population = []
 
-        for i in range(self.population_size):
-            tournament_indices = np.random.choice(
-                self.population_size, k, replace=False
-            )
-            best_idx = max(tournament_indices, key=lambda idx: self.function_cache[idx])
-            new_population.append(self.population[best_idx])
-            new_cache[i] = self.function_cache[best_idx]
+        for _ in range(self.population_size):
+            contenders = random.sample(self.population, k)
 
-        return new_population, new_cache
+            best = max(
+                contenders,
+                key=lambda ind: -np.inf if ind.fitness is None else ind.fitness,
+            )
+
+            new_population.append(
+                Individual(masks=copy.deepcopy(best.masks), fitness=best.fitness)
+            )
+
+        return new_population
+
+    def reproduction(self, population: List[Individual]) -> List[Individual]:
+        new_population = []
+        for i in range(0, self.population_size - 1, 2):
+            if np.random.uniform(0, 1) < self.params.get("reproduce_rate", 0.1):
+                new_pop1, new_pop2 = self.reproduce(
+                    population[i].masks, population[i + 1].masks
+                )
+                new_population.append(Individual(new_pop1, self.evaluate(new_pop1)))
+                new_population.append(Individual(new_pop2, self.evaluate(new_pop2)))
+
+        return population + new_population
 
     def reproduce(
         self, solution_a: Solution, solution_b: Solution
@@ -127,9 +117,30 @@ class GeneticAlgorithm(Optimizer):
 
         return masks
 
-    def elite_selection(self, elites: List[Solution], elite_cache: List[float]) -> None:
-        indices = random.sample(range(self.population_size), len(elites))
+    def elite_selection(
+        self, population: List[Individual]
+    ) -> Tuple[List[Individual], Individual]:
+        valid_population = [ind for ind in population if ind.fitness is not None]
+        sorted_pop = sorted(valid_population, key=lambda ind: ind.fitness, reverse=True)  # type: ignore
 
-        for elite, cache, idx in zip(elites, elite_cache, indices):
-            self.population[idx] = elite
-            self.function_cache[idx] = cache
+        elites = sorted_pop[: self.n_elite]
+        best_ind = elites[0]
+
+        remaining = sorted_pop[self.n_elite :]
+        new_population = random.sample(
+            remaining, k=min(self.population_size - self.n_elite, len(remaining))
+        )
+
+        return elites + new_population, best_ind
+
+    def create_random_individual(self) -> Individual:
+        masks = self._create_random_solution()
+        value = self.evaluate(masks)
+
+        return Individual(masks, value)
+
+    def evaluate(self, masks: Solution) -> float | None:
+        if self.calls_used >= self.n_calls:
+            return None
+
+        return self._evaluate(masks)

@@ -30,12 +30,12 @@ class HillClimbing(Optimizer):
 
         for r in range(self.restarts):
             current_masks = self._create_random_solution()
-            current_score = self.evaluate(current_masks)
+            current_score = self._evaluate(current_masks)
 
             pbar = tqdm(range(self.steps_per_restart - 1), desc=f"Restart {r+1}")
             for _ in pbar:
                 neighbour_masks = self.get_neighbour(current_masks)
-                neighbour_score = self.evaluate(neighbour_masks)
+                neighbour_score = self._evaluate(neighbour_masks)
 
                 if neighbour_score >= current_score:
                     current_masks = neighbour_masks

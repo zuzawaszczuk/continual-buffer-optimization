@@ -1,7 +1,7 @@
 import datetime
-import numpy as np
 import logging
 
+import numpy as np
 import pandas as pd
 import torch
 import yaml
@@ -54,6 +54,8 @@ for strategy_conf in config.strategies:
 
     best_score, best_masks = optimizer.optimize()
 
+    print(f"{strategy_conf.name} calls {optimizer.calls_used}")
+
     history_ecdf[f"{strategy_conf.name}"] = optimizer.history
     best_mask_per_strategy[f"{strategy_conf.name}"] = best_masks
 
@@ -63,4 +65,4 @@ print(history_ecdf)
 plot_ecdf(history_ecdf, file_name)
 plot_history(history_ecdf, file_name)
 
-np.savez(f"{file_name}_masks.npz", **best_mask_per_strategy)
+np.save(f"{file_name}_masks.npz", **best_mask_per_strategy, allow_pickle=True)  # type: ignore

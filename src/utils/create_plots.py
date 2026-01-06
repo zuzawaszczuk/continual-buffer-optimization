@@ -7,11 +7,11 @@ def plot_ecdf(df: pd.DataFrame, name: str) -> None:
     df_melted = df.melt(var_name="Distribution", value_name="Value")
 
     plt.figure(figsize=(12, 8))
-    sns.ecdfplot(data=df_melted, x='Value', hue='Distribution', legend='full')
+    sns.ecdfplot(data=df_melted, x="Value", hue="Distribution", legend=True)
     plt.savefig(f"{name}_ecdf.jpg")
 
 
-def plot_history(df: pd.DataFrame, name: str):
+def plot_history(df: pd.DataFrame, name: str) -> None:
     plt.figure(figsize=(12, 8))
 
     for col in df.columns:
