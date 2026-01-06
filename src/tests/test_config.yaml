@@ -1,0 +1,24 @@
+dataset: 
+  name: "SplitCIFAR10"
+  n_tasks: 5
+  eval_ratio: 0
+  test_ratio: 0
+  seed: 42
+
+model:
+  type: "SimpleMLP"
+  input_dim: 784
+  hidden_dims: 128
+  output_dim: 10
+  optimizer: "SGD"
+  lr: 0.01
+  dropout: 0.5
+  criterion: "CrossEntropyLoss"
+  epochs: 2
+  batch: 128
+
+strategies:
+  - name: "TestSTrategy"
+    buffer_size: 100
+    n_calls: 50
+    params: {}

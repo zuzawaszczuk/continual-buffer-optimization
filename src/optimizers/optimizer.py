@@ -1,9 +1,14 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Tuple
+from logging import Logger
+from typing import Dict, List, Tuple, TypeAlias
+
 import numpy as np
 from avalanche.benchmarks import NCScenario
-from config import ModelConfig
+
+from config import HyperparamStrategyConfig, ModelConfig
 from objective.function import Function
+
+Solution: TypeAlias = Dict[int, np.ndarray]
 
 
 class Optimizer(ABC):
@@ -11,26 +16,40 @@ class Optimizer(ABC):
         self,
         benchmark: NCScenario,
         model_config: ModelConfig,
-        hyperparams: Dict[str, Any],
+        hyperparams: HyperparamStrategyConfig,
+        logger: Logger = Logger("default"),
     ):
         self.benchmark = benchmark
         self.model_config = model_config
-        self.hyperparams = hyperparams
+        self.params = hyperparams.params
+        self.logger = logger
 
         self.function = Function(self.benchmark, self.model_config)
         self.task_sizes = {
             i: len(exp.dataset)
             for i, exp in enumerate(self.benchmark.train_stream[:-1])
         }
-        self.buffer_size = self.hyperparams.get("buffer_size_per_task", 500)
+        self.buffer_size = hyperparams.buffer_size
+        self.n_calls = hyperparams.n_calls
+        self.history: List[float] = []
 
     @abstractmethod
-    def optimize(self) -> Tuple[float, Dict[int, np.ndarray]]:
+    def optimize(self) -> Tuple[float, Solution]:
         pass
 
-    def evaluate(self, masks: Dict[int, np.ndarray]) -> float:
-        return self.function(masks)
+    def evaluate(self, masks: Solution) -> float:
+        value = self.function(masks)
+        self.history.append(value)
+        return value
 
     def _create_random_mask(self, total_size: int, n_ones: int) -> np.ndarray:
         indices = np.random.choice(total_size, n_ones, replace=False)
         return indices
+
+    def _create_random_solution(self) -> Solution:
+        solution = {
+            i: self._create_random_mask(self.task_sizes[i], self.buffer_size)
+            for i, exp in enumerate(self.benchmark.train_stream[:-1])
+        }
+
+        return solution
