@@ -49,14 +49,14 @@ class GeneticAlgorithm(Optimizer):
             )
 
             for i in range(0, len(self.population) - 1, 2):
-                if np.random.uniform(0, 1) > self.params.get("reproduce_rate", 0.1):
+                if np.random.uniform(0, 1) < self.params.get("reproduce_rate", 0.9):
                     self.population[i], self.population[i + 1] = self.reproduce(
                         self.population[i], self.population[i + 1]
                     )
                     self.function_cache[i], self.function_cache[i + 1] = None, None
 
             for i in range(len(self.population)):
-                if np.random.uniform(0, 1) > self.params.get("mutation_rate", 0.1):
+                if np.random.uniform(0, 1) < self.params.get("mutation_rate", 0.1):
                     self.population[i] = self.mutation(self.population[i])
                     self.function_cache[i] = None
 
