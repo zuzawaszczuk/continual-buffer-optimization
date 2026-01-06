@@ -37,7 +37,7 @@ class GeneticAlgorithm(Optimizer):
         for epoch in range(self.epochs):
             self.logger.info(f"Epoch: {epoch}")
 
-            if self.calls_used > self.n_calls:
+            if self.calls_used >= self.n_calls:
                 break
 
             elite_indices = np.argsort(self.function_cache)[-self.n_elite :]  # type: ignore[arg-type]
@@ -75,10 +75,10 @@ class GeneticAlgorithm(Optimizer):
         return value, self.population[best_idx]
 
     def calculate(self) -> None:
-        for i in range(len(self.population)):
+        for i, individual in enumerate(self.population):
             if self.function_cache[i] is None and self.calls_used < self.n_calls:
                 self.calls_used += 1
-                self.function_cache[i] = self.evaluate(self.population[i])
+                self.function_cache[i] = self.evaluate(individual)
 
     def tournament_selection(
         self, k: int = 2
