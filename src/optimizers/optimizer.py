@@ -31,15 +31,20 @@ class Optimizer(ABC):
         }
         self.buffer_size = hyperparams.buffer_size
         self.n_calls = hyperparams.n_calls
+        self.calls_used = 0
         self.history: List[float] = []
 
     @abstractmethod
     def optimize(self) -> Tuple[float, Solution]:
         pass
 
-    def evaluate(self, masks: Solution) -> float:
+    def _evaluate(self, masks: Solution) -> float:
+        if self.calls_used >= self.n_calls:
+            print("All function calls were already used")
+
         value = self.function(masks)
         self.history.append(value)
+        self.calls_used += 1
         return value
 
     def _create_random_mask(self, total_size: int, n_ones: int) -> np.ndarray:
