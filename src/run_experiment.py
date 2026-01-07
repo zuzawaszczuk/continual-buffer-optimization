@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import torch
 import yaml
+import pickle
 
 from config import Config
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
@@ -65,4 +66,5 @@ print(history_ecdf)
 plot_ecdf(history_ecdf, file_name)
 plot_history(history_ecdf, file_name)
 
-np.save(f"{file_name}_masks.npz", **best_mask_per_strategy, allow_pickle=True)  # type: ignore
+with open(f"{file_name}_masks.pkl", 'wb') as f:
+    pickle.dump(best_mask_per_strategy, f)
