@@ -1,15 +1,16 @@
 import datetime
-import numpy as np
 import logging
 
+import numpy as np
 import pandas as pd
 import torch
 import yaml
+import pickle
 
 from config import Config
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
 from optimizers import get_optimizer
-from utils import plot_ecdf
+from utils import plot_ecdf, plot_history
 
 torch.backends.cudnn.benchmark = True
 torch.set_float32_matmul_precision("high")
@@ -22,7 +23,7 @@ with open("config.yaml", "r") as file:
 config = Config(**data)
 
 start_time = datetime.datetime.now()
-file_name = f"{config.dataset.name}_{start_time.strftime('%Y-%m-%d %H:%M:%S')}"
+file_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
 
 fh = logging.FileHandler(f"{file_name}.txt")
 fh.setLevel(logging.DEBUG)
@@ -54,6 +55,8 @@ for strategy_conf in config.strategies:
 
     best_score, best_masks = optimizer.optimize()
 
+    print(f"{strategy_conf.name} calls {optimizer.calls_used}")
+
     history_ecdf[f"{strategy_conf.name}"] = optimizer.history
     best_mask_per_strategy[f"{strategy_conf.name}"] = best_masks
 
@@ -61,5 +64,7 @@ for strategy_conf in config.strategies:
 
 print(history_ecdf)
 plot_ecdf(history_ecdf, file_name)
+plot_history(history_ecdf, file_name)
 
-np.savez(f"{file_name}_masks.npz", **best_mask_per_strategy)
+with open(f"{file_name}_masks.pkl", 'wb') as f:
+    pickle.dump(best_mask_per_strategy, f)
