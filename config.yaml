@@ -35,9 +35,14 @@ strategies:
       epochs: 20,
       population: 40,
       mutation_rate: 0.1,
-      reproduce_rate: 0.1,
+      reproduce_rate: 0.9,
       elite_size: 2,
       tournament_size: 2
     }
-      
-
+  - name: "PBIL"
+    n_calls: 6
+    params: {
+      population: 2,
+      learning_rate: 0.1,
+      mutation_prob: 0.05
+    }

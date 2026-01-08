@@ -14,6 +14,7 @@ src/
 │   ├── optimizer.py          # Base class
 │   ├── random_search.py      # RandomSearch class
 │   └── hill_climbing.py      # HillClimbing class
+│   └── pbil.py               # PBILOptimizer class
 ├── tests/
 │   └── test_benchmark.py  
 ├── utils/
