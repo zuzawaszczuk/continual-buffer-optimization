@@ -22,7 +22,7 @@ strategies:
     buffer_size: 500
     n_calls: 100
     params: {
-      restart: 10
+      restart: 1
     } 
   - name: "RandomSearch"
     buffer_size: 500

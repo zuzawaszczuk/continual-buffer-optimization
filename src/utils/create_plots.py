@@ -8,7 +8,7 @@ def plot_ecdf(df: pd.DataFrame, name: str) -> None:
 
     plt.figure(figsize=(12, 8))
     sns.ecdfplot(data=df_melted, x="Value", hue="Distribution", legend=True)
-    plt.savefig(f"{name}_ecdf.jpg")
+    plt.savefig(f"{name}/ecdf.jpg")
 
 
 def plot_history(df: pd.DataFrame, name: str) -> None:
@@ -20,4 +20,4 @@ def plot_history(df: pd.DataFrame, name: str) -> None:
     plt.ylabel("Value")
     plt.title("Historical Value Evolution")
     plt.legend()
-    plt.savefig(f"{name}_history.jpg")
+    plt.savefig(f"{name}/history.jpg")

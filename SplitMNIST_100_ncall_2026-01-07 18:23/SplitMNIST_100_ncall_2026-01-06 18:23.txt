@@ -1,0 +1,59 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 5,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 4,
+        "batch": 128
+    },
+    "strategies": [
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "restart": 4
+            }
+        },
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {}
+        },
+        {
+            "name": "Genetic",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "epochs": 20,
+                "population": 40,
+                "mutation_rate": 0.5,
+                "reproduce_rate": 0.2,
+                "elite_size": 5,
+                "tournament_size": 0
+            }
+        }
+    ]
+}
+Running strategy: HillClimbing | Start time: 2026-01-06 18:23:16
+Best accuracy for HillClimbing: 0.7735911970656886
+Running strategy: RandomSearch | Start time: 2026-01-06 19:32:12
+Best accuracy for RandomSearch: 0.7616705568522841
+Running strategy: Genetic | Start time: 2026-01-06 20:38:54
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Best accuracy for Genetic: 0.7846782260753584

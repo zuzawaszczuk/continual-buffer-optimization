@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-import numpy as np
+import os
 import pandas as pd
 import torch
 import yaml
@@ -18,14 +18,20 @@ torch.set_float32_matmul_precision("high")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 with open("config.yaml", "r") as file:
-    data = yaml.safe_load(file)
+    data_config = yaml.safe_load(file)
 
-config = Config(**data)
+config = Config(**data_config)
+
 
 start_time = datetime.datetime.now()
-file_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
+folder_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
 
-fh = logging.FileHandler(f"{file_name}.txt")
+os.makedirs(folder_name, exist_ok=True)
+
+with open(f"{folder_name}/history_config.yaml", 'w') as f:
+    yaml.dump(data_config, f)
+
+fh = logging.FileHandler(f"{folder_name}/logs.txt")
 fh.setLevel(logging.DEBUG)
 logger = logging.getLogger("GA_logger")
 logger.setLevel(logging.INFO)
@@ -63,8 +69,8 @@ for strategy_conf in config.strategies:
     logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
 
 print(history_ecdf)
-plot_ecdf(history_ecdf, file_name)
-plot_history(history_ecdf, file_name)
+plot_ecdf(history_ecdf, folder_name)
+plot_history(history_ecdf, folder_name)
 
-with open(f"{file_name}_masks.pkl", 'wb') as f:
+with open(f"{folder_name}/masks.pkl", 'wb') as f:
     pickle.dump(best_mask_per_strategy, f)
