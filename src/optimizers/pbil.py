@@ -1,9 +1,11 @@
 from logging import Logger
 from typing import Dict, Tuple, TypeAlias
+
 import numpy as np
 from avalanche.benchmarks import NCScenario
 
 from config import HyperparamStrategyConfig, ModelConfig
+
 from .optimizer import Optimizer
 
 Solution: TypeAlias = Dict[int, np.ndarray]

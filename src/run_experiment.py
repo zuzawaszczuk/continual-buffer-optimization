@@ -1,11 +1,11 @@
 import datetime
 import logging
-
 import os
+import pickle
+
 import pandas as pd
 import torch
 import yaml
-import pickle
 
 from config import Config
 from objective.manage_benchmark import get_benchmark, print_dataset_stats
@@ -28,7 +28,7 @@ folder_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %
 
 os.makedirs(folder_name, exist_ok=True)
 
-with open(f"{folder_name}/history_config.yaml", 'w') as f:
+with open(f"{folder_name}/history_config.yaml", "w") as f:
     yaml.dump(data_config, f)
 
 fh = logging.FileHandler(f"{folder_name}/logs.txt")
@@ -72,5 +72,5 @@ print(history_ecdf)
 plot_ecdf(history_ecdf, folder_name)
 plot_history(history_ecdf, folder_name)
 
-with open(f"{folder_name}/masks.pkl", 'wb') as f:
+with open(f"{folder_name}/masks.pkl", "wb") as f:
     pickle.dump(best_mask_per_strategy, f)
