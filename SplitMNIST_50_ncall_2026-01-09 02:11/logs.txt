@@ -48,3 +48,9 @@ Epoch: 3
 Epoch: 4
 Epoch: 5
 Best accuracy for PBIL: 0.7726742247415805
+Function value RandomSearch 0.7289096365455152
+Test value RandomSearch 0.7372
+Function value PBIL 0.6624708236078692
+Test value PBIL 0.6311
+Function value Without Buffer 0.20431810603534512
+Test value Without Buffer 0.1992

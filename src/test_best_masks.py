@@ -11,7 +11,7 @@ from objective import Function, TestFunction
 from objective.manage_benchmark import get_benchmark
 from utils import plot_heatmaps
 
-folder_name = "SplitMNIST_100_ncall_2026-01-07 11:35"
+folder_name = "SplitMNIST_50_ncall_2026-01-09 02:11"
 
 with open(f"{folder_name}/masks.pkl", "rb") as f:
     best_mask_per_strategy = pickle.load(f)
