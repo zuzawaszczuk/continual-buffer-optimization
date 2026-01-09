@@ -1,0 +1,98 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 5,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 4,
+        "batch": 128
+    },
+    "strategies": [
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "restart": 1
+            }
+        },
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {}
+        }
+    ]
+}
+Running strategy: HillClimbing | Start time: 2026-01-07 11:35:21
+Best accuracy for HillClimbing: 0.7765088362787596
+Running strategy: RandomSearch | Start time: 2026-01-07 12:29:49
+Best accuracy for RandomSearch: 0.7947649216405468
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Test value 0.6491
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.20398466155385128
+Test value 0.1999
+Function value 0.7291597199066355
+Test value 0.6686
+Function value 0.6608869623207736
+Test value 0.7321
+Function value 0.20398466155385128
+Test value 0.1999
