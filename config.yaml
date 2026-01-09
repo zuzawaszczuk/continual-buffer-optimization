@@ -1,5 +1,5 @@
 dataset: 
-  name: "SplitMNIST"
+  name: "SplitCIFAR10"
   n_tasks: 5
   eval_ratio: 0.2
   test_ratio: 0.2
@@ -7,30 +7,30 @@ dataset:
 
 model:
   type: "SimpleMLP"
-  input_dim: 784
-  hidden_dims: 128
+  input_dim: 3072
+  hidden_dims: 512
   output_dim: 10
   optimizer: "SGD"
   lr: 0.01
   dropout: 0.5
   criterion: "CrossEntropyLoss"
-  epochs: 4
-  batch: 128
+  epochs: 5
+  batch: 512
 
 strategies:
   - name: "HillClimbing"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 50
     params: {
       restart: 1
     } 
-  - name: "RandomSearch"
-    buffer_size: 500
-    n_calls: 100
-    params: {}
+  # - name: "RandomSearch"
+  #   buffer_size: 500
+  #   n_calls: 100
+  #   params: {}
   - name: "Genetic"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 50
     params: {
       epochs: 20,
       population: 40,
