@@ -1,4 +1,3 @@
-import math
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -28,7 +27,10 @@ def plot_history(df: pd.DataFrame, name: str) -> None:
 
 
 def plot_heatmaps(
-    dataframes: List[pd.DataFrame], titles: List[str], folder_name: str, cmap="Blues"
+    dataframes: List[pd.DataFrame],
+    titles: List[str],
+    folder_name: str,
+    cmap: str = "Blues",
 ) -> None:
     n = len(dataframes)
 

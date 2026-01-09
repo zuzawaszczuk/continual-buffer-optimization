@@ -1,9 +1,10 @@
 import logging
 import pickle
 from typing import List
+
+import numpy as np
 import pandas as pd
 import yaml
-import numpy as np
 
 from config import Config
 from objective import Function, TestFunction
@@ -36,16 +37,16 @@ best_mask_per_strategy["Without Buffer"] = {
     0: np.array([2]),
     1: np.array([2]),
     2: np.array([2]),
-    3: np.array([])
+    3: np.array([]),
 }
 for best_masks in best_mask_per_strategy:
     print(best_masks)
     function_value = func(best_mask_per_strategy[best_masks])
-    logger.info(f"Function value {best masks} {function_value}")
+    logger.info(f"Function value {best_masks} {function_value}")
 
     test_value = test_func(best_mask_per_strategy[best_masks])
     logger.info(
-        f"Test value {best masks} {test_value['all']['Top1_Acc_Stream/eval_phase/test_stream']}"
+        f"Test value {best_masks} {test_value['all']['Top1_Acc_Stream/eval_phase/test_stream']}"
     )
 
     prefix = "Top1_Acc_Exp/eval_phase/test_stream"
@@ -53,8 +54,7 @@ for best_masks in best_mask_per_strategy:
     df = pd.DataFrame(
         {
             f"after_{key}": [
-                v for k, v in sorted(metrics.items())
-                if k.startswith(prefix)
+                v for k, v in sorted(metrics.items()) if k.startswith(prefix)
             ]
             for key, metrics in test_value.items()
         },

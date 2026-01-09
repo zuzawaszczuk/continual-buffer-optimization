@@ -17,9 +17,7 @@ class TestFunction(Function):
         for experience in self.benchmark.train_stream:
             task_id = experience.current_experience
             cl_strategy.train(experience)
-            self.metrics[f"{task_id}"] = cl_strategy.eval(
-                self.benchmark.test_stream
-            )
+            self.metrics[f"{task_id}"] = cl_strategy.eval(self.benchmark.test_stream)
 
     def eval(self, cl_strategy: OptimizedBufferStrategy) -> Any:
         self.metrics["all"] = cl_strategy.eval(self.benchmark.test_stream)
