@@ -12,6 +12,7 @@ class RandomSearch(Optimizer):
     def optimize(self) -> Tuple[float, Solution]:
         best_score = -1.0
         best_masks = None
+        self.calls_used = 0
 
         for _ in tqdm(range(self.n_calls)):
             current_masks = self._create_random_solution()

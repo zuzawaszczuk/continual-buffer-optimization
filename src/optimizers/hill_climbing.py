@@ -59,7 +59,7 @@ class HillClimbing(Optimizer):
             all_indices = np.arange(total_size)
             available = np.setdiff1d(all_indices, new_mask)
 
-            if len(available) > 0:
+            if len(available) > swaps:
                 swap_out = np.random.choice(new_mask, size=swaps, replace=False)
                 swap_in = np.random.choice(available, size=swaps, replace=False)
 
