@@ -1,6 +1,6 @@
 dataset: 
   name: "SplitMNIST"
-  n_tasks: 5
+  n_tasks: 2
   eval_ratio: 0.2
   test_ratio: 0.2
   seed: 42
@@ -9,13 +9,13 @@ model:
   type: "SimpleMLP"
   input_dim: 784
   hidden_dims: 128
-  output_dim: 10
+  output_dim: 4
   optimizer: "SGD"
   lr: 0.01
   dropout: 0.5
   criterion: "CrossEntropyLoss"
-  epochs: 4
-  batch: 128
+  epochs: 5
+  batch: 512
 
 strategies:
   - name: "HillClimbing"
@@ -28,22 +28,14 @@ strategies:
     buffer_size: 500
     n_calls: 100
     params: {}
-  - name: "Genetic"
-    buffer_size: 500
-    n_calls: 100
-    params: {
-      epochs: 20,
-      population: 40,
-      mutation_rate: 0.1,
-      reproduce_rate: 0.9,
-      elite_size: 2,
-      tournament_size: 2
-    }
-  - name: "PBIL"
-    buffer_size: 500
-    n_calls: 6
-    params: {
-      population: 2,
-      learning_rate: 0.1,
-      mutation_prob: 0.05
-    }
+  # - name: "Genetic"
+  #   buffer_size: 500
+  #   n_calls: 200
+  #   params: {
+  #     epochs: 20,
+  #     population: 10,
+  #     mutation_rate: 0.1,
+  #     reproduce_rate: 0.9,
+  #     elite_size: 2,
+  #     tournament_size: 2
+  #   }

@@ -1,0 +1,38 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 2,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 4,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 5,
+        "batch": 512
+    },
+    "strategies": [
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "restart": 1
+            }
+        },
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {}
+        }
+    ]
+}
+Running strategy: HillClimbing | Start time: 2026-01-10 14:16:55

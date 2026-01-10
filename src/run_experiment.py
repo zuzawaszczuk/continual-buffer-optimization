@@ -24,7 +24,7 @@ config = Config(**data_config)
 
 
 start_time = datetime.datetime.now()
-folder_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
+folder_name = f"{config.dataset.name}_2tasks_{start_time.strftime('%Y-%m-%d %H:%M')}"
 
 os.makedirs(folder_name, exist_ok=True)
 

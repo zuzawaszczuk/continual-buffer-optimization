@@ -77,14 +77,14 @@ def factory_benchmark(name: str, seed: int) -> NCScenario:
     name = name.lower()
 
     benchmark_map = {
-        "splitmnist": (SplitMNIST, 5),
-        "splitcifar10": (SplitCIFAR10, 5),
-        "splitcifar100": (SplitCIFAR100, 10),
-        "splitcifar110": (SplitCIFAR110, 10),
+        "splitmnist": (SplitMNIST, 5, list(range(0, 10))),
+        "splitcifar10": (SplitCIFAR10, 5, list(range(0, 10))),
+        "splitcifar100": (SplitCIFAR100, 10, list(range(0, 100))),
+        "splitcifar110": (SplitCIFAR110, 10, list(range(0, 100))),
     }
 
     if name not in benchmark_map:
         raise ValueError(f"Unknown dataset: {name}")
 
-    BenchmarkClass, n_experiences = benchmark_map[name]
-    return BenchmarkClass(n_experiences=n_experiences, seed=seed)
+    BenchmarkClass, n_experiences, fixed_order = benchmark_map[name]
+    return BenchmarkClass(n_experiences=n_experiences, seed=seed, fixed_class_order=fixed_order)
