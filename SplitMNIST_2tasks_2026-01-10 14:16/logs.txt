@@ -36,3 +36,28 @@
     ]
 }
 Running strategy: HillClimbing | Start time: 2026-01-10 14:16:55
+Best accuracy for HillClimbing: 0.9013942210547585
+Running strategy: RandomSearch | Start time: 2026-01-10 14:43:30
+Best accuracy for RandomSearch: 0.9068498686603355
+Function value HillClimbing 0.8302687411598303
+Test value HillClimbing 0.8876593697377917
+Function value HillClimbing 0.8971509395837542
+Test value HillClimbing 0.9057012268462834
+Function value HillClimbing 0.8793695696100222
+Test value HillClimbing 0.8900649506855906
+Function value HillClimbing 0.6769044251363912
+Function value HillClimbing 0.8955344514043241
+Test value HillClimbing 0.8823670916526342
+Test value HillClimbing 0.8941544382968487
+Function value HillClimbing 0.8773489593857345
+Function value HillClimbing 0.8288543140028288
+Test value HillClimbing 0.8864565792638922
+Test value HillClimbing 0.9008900649506856
+Function value RandomSearch 0.8866437664174581
+Function value RandomSearch 0.8957365124267529
+Test value RandomSearch 0.9008900649506856
+Test value RandomSearch 0.8886216021169112
+Function value Without Buffer 0.47363103657304506
+Function value Without Buffer 0.47262073146090117
+Test value Without Buffer 0.4779889343276401
+Test value Without Buffer 0.47991339908587927
