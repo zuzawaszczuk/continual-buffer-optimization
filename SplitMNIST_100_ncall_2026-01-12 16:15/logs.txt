@@ -1,0 +1,50 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 2,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 5,
+        "batch": 512
+    },
+    "strategies": [
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {
+                "restart": 1
+            }
+        },
+        {
+            "name": "PBIL",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {
+                "epochs": 20,
+                "population": 3,
+                "learning_rate": 0.1,
+                "mutation_prob": 0.05,
+                "mutation_shift": 0.05
+            }
+        }
+    ]
+}
+Running strategy: HillClimbing | Start time: 2026-01-12 16:15:02
+Best accuracy for HillClimbing: 0.8562959934587081
+Running strategy: PBIL | Start time: 2026-01-12 16:16:06
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Best accuracy for PBIL: 0.8898201144726083

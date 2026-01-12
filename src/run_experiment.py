@@ -3,7 +3,6 @@ import logging
 import os
 import pickle
 
-import os
 import pandas as pd
 import torch
 import yaml
@@ -22,10 +21,6 @@ with open("config.yaml", "r") as file:
     data_config = yaml.safe_load(file)
 
 config = Config(**data_config)
-    data_config = yaml.safe_load(file)
-
-config = Config(**data_config)
-
 
 start_time = datetime.datetime.now()
 folder_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
@@ -36,7 +31,6 @@ with open(f"{folder_name}/history_config.yaml", 'w') as f:
     yaml.dump(data_config, f)
 
 fh = logging.FileHandler(f"{folder_name}/logs.txt")
-fh = logging.FileHandler(f"{folder_name}/logs.txt")
 fh.setLevel(logging.DEBUG)
 logger = logging.getLogger("GA_logger")
 logger.setLevel(logging.INFO)
@@ -46,7 +40,7 @@ logger.info(config.model_dump_json(indent=4))
 benchmark = get_benchmark(config.dataset)
 print_dataset_stats(benchmark)
 
-history_ecdf = pd.DataFrame()
+all_histories = {}  
 best_mask_per_strategy = {}
 
 for strategy_conf in config.strategies:
@@ -68,10 +62,14 @@ for strategy_conf in config.strategies:
 
     print(f"{strategy_conf.name} calls {optimizer.calls_used}")
 
-    history_ecdf[f"{strategy_conf.name}"] = optimizer.history
+    all_histories[f"{strategy_conf.name}"] = optimizer.history
     best_mask_per_strategy[f"{strategy_conf.name}"] = best_masks
 
     logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
+
+history_ecdf = pd.DataFrame({
+    k: pd.Series(v) for k, v in all_histories.items()
+})
 
 print(history_ecdf)
 
