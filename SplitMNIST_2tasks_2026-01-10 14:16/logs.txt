@@ -61,3 +61,9 @@ Function value Without Buffer 0.47363103657304506
 Function value Without Buffer 0.47262073146090117
 Test value Without Buffer 0.4779889343276401
 Test value Without Buffer 0.47991339908587927
+Function value HillClimbing 0.88139017983431
+Test value HillClimbing 0.8994467163820062
+Function value RandomSearch 0.8904829258436048
+Test value RandomSearch 0.8941544382968487
+Function value Without Buffer 0.4718124873711861
+Test value Without Buffer 0.4791917248015396
