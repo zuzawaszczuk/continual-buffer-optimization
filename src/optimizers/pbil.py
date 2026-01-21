@@ -25,8 +25,9 @@ class PBILOptimizer(Optimizer):
         self.learning_rate = self.params.get("learning_rate", 0.1)
         self.mutation_prob = self.params.get("mutation_prob", 0.05)
         self.mutation_shift = self.params.get("mutation_shift", 0.05)
-        self.epochs = self.params.get("epochs", 1)
         self.calls_used = 0
+        estimated_epochs = (self.n_calls // self.pop_size) + 2
+        self.epochs = max(self.params.get("epochs", 1), estimated_epochs)
 
         self.prob_vectors = {
             tid: np.full(size, 0.5) for tid, size in self.task_sizes.items()
@@ -35,6 +36,8 @@ class PBILOptimizer(Optimizer):
     def optimize(self) -> Tuple[float, Solution]:
         best_global_score = -np.inf
         best_global_solution: Solution = {}
+        if self.prob_vectors:
+            best_global_solution = self.create_sample()
 
         for epoch in range(self.epochs):
             self.logger.info(f"Epoch: {epoch}")
@@ -66,7 +69,6 @@ class PBILOptimizer(Optimizer):
 
             self.update_probs(current_best_solution)
             self.mutate_probs()
-            # self.logger.info(f"Best score: {current_best_score:.4f}")
         return best_global_score, best_global_solution
 
     def create_sample(self) -> Solution:
@@ -78,8 +80,9 @@ class PBILOptimizer(Optimizer):
             else:
                 p_norm = np.ones_like(probs) / len(probs)
 
+            sample_size = min(len(probs), self.buffer_size)            
             selected_indices = np.random.choice(
-                len(probs), size=self.buffer_size, replace=False, p=p_norm
+                len(probs), size=sample_size, replace=False, p=p_norm
             )
             solution[tid] = selected_indices
         return solution

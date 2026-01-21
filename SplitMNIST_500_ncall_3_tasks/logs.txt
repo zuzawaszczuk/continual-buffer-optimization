@@ -1,0 +1,131 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 3,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 5,
+        "batch": 512
+    },
+    "strategies": [
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 500,
+            "params": {}
+        },
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 500,
+            "params": {
+                "restart": 5
+            }
+        },
+        {
+            "name": "Genetic",
+            "buffer_size": 500,
+            "n_calls": 500,
+            "params": {
+                "epochs": 25,
+                "population": 20,
+                "mutation_rate": 0.1,
+                "reproduce_rate": 0.9,
+                "n_elite": 2,
+                "tournament_size": 4
+            }
+        },
+        {
+            "name": "PBIL",
+            "buffer_size": 500,
+            "n_calls": 500,
+            "params": {
+                "epochs": 25,
+                "population": 20,
+                "learning_rate": 0.15,
+                "mutation_prob": 0.02,
+                "mutation_shift": 0.05
+            }
+        }
+    ]
+}
+Running strategy: RandomSearch | Start time: 2026-01-20 01:51:30
+Best accuracy for RandomSearch: 0.8240481522956327
+Running strategy: HillClimbing | Start time: 2026-01-20 04:16:59
+Best accuracy for HillClimbing: 0.8288073908174692
+Running strategy: Genetic | Start time: 2026-01-20 06:41:10
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Epoch: 4
+Epoch: 5
+Epoch: 6
+Epoch: 7
+Epoch: 8
+Epoch: 9
+Epoch: 10
+Epoch: 11
+Epoch: 12
+Epoch: 13
+Epoch: 14
+Epoch: 15
+Epoch: 16
+Epoch: 17
+Epoch: 18
+Epoch: 19
+Epoch: 20
+Epoch: 21
+Epoch: 22
+Best accuracy for Genetic: 0.81005039193729
+Running strategy: PBIL | Start time: 2026-01-20 09:05:41
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Epoch: 4
+Epoch: 5
+Epoch: 6
+Epoch: 7
+Epoch: 8
+Epoch: 9
+Epoch: 10
+Epoch: 11
+Epoch: 12
+Epoch: 13
+Epoch: 14
+Epoch: 15
+Epoch: 16
+Epoch: 17
+Epoch: 18
+Epoch: 19
+Epoch: 20
+Epoch: 21
+Epoch: 22
+Epoch: 23
+Epoch: 24
+Epoch: 25
+Best accuracy for PBIL: 0.8307670772676372
+Function value RandomSearch 0.7392217245240762
+Test value RandomSearch 0.7426753725096267
+Function value RandomSearch 0.7392217245240762
+Test value RandomSearch 0.7426753725096267
+Function value HillClimbing 0.7308230683090705
+Test value HillClimbing 0.7944081700987778
+Function value Genetic 0.7269036954087346
+Test value Genetic 0.7388247112004018
+Function value PBIL 0.8001119820828667
+Test value PBIL 0.744182153021932
+Function value Without Buffer 0.31284994400895855
+Test value Without Buffer 0.31073162564875273

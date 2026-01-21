@@ -40,7 +40,7 @@ logger.info(config.model_dump_json(indent=4))
 benchmark = get_benchmark(config.dataset)
 print_dataset_stats(benchmark)
 
-all_histories = {}  
+all_histories = {}
 best_mask_per_strategy = {}
 
 for strategy_conf in config.strategies:
@@ -62,19 +62,26 @@ for strategy_conf in config.strategies:
 
     print(f"{strategy_conf.name} calls {optimizer.calls_used}")
 
-    all_histories[f"{strategy_conf.name}"] = optimizer.history
+    target_len = strategy_conf.n_calls
+    hist = optimizer.history
+    if len(hist) > target_len:
+        hist = hist[:target_len]
+    elif len(hist) < target_len:
+        hist.extend([hist[-1] if hist else 0.0] * (target_len - len(hist)))
+
+    all_histories[f"{strategy_conf.name}"] = hist
     best_mask_per_strategy[f"{strategy_conf.name}"] = best_masks
 
     logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
 
-history_ecdf = pd.DataFrame({
-    k: pd.Series(v) for k, v in all_histories.items()
-})
+    checkpoint_df = pd.DataFrame({k: pd.Series(v) for k, v in all_histories.items()})
+    checkpoint_df.to_csv(f"{folder_name}/history_checkpoint.csv", index=False)
 
-print(history_ecdf)
+    with open(f"{folder_name}/masks_checkpoint.pkl", 'wb') as f:
+        pickle.dump(best_mask_per_strategy, f)
+    
+    plot_ecdf(checkpoint_df, folder_name)
+    plot_history(checkpoint_df, folder_name)
 
-plot_ecdf(history_ecdf, folder_name)
-plot_history(history_ecdf, folder_name)
-
-with open(f"{folder_name}/masks.pkl", 'wb') as f:
-    pickle.dump(best_mask_per_strategy, f)
+final_df = pd.DataFrame({k: pd.Series(v) for k, v in all_histories.items()})
+print(final_df)

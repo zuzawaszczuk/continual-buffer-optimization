@@ -1,6 +1,6 @@
-dataset: 
+dataset:
   name: "SplitMNIST"
-  n_tasks: 2
+  n_tasks: 3
   eval_ratio: 0.2
   test_ratio: 0.2
   seed: 42
@@ -18,34 +18,34 @@ model:
   batch: 512
 
 strategies:
+  - name: "RandomSearch"
+    buffer_size: 500
+    n_calls: 500
+    params: {}
   - name: "HillClimbing"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 500
     params: {
-      restart: 1
+      restart: 5
     } 
-  # - name: "RandomSearch"
-  #   buffer_size: 500
-  #   n_calls: 5
-  #   params: {}
-  # - name: "Genetic"
-  #   buffer_size: 500
-  #   n_calls: 5
-  #   params: {
-  #     epochs: 20,
-  #     population: 2,
-  #     mutation_rate: 0.1,
-  #     reproduce_rate: 0.9,
-  #     elite_size: 2,
-  #     tournament_size: 2
-  #   }
+  - name: "Genetic"
+    buffer_size: 500
+    n_calls: 500
+    params: {
+      epochs: 25,
+      population: 20,
+      mutation_rate: 0.1,
+      reproduce_rate: 0.9,
+      n_elite: 2,
+      tournament_size: 4
+    }
   - name: "PBIL"
     buffer_size: 500
-    n_calls: 100
+    n_calls: 500
     params: {
-      epochs: 20,
+      epochs: 25,
       population: 20,
-      learning_rate: 0.1,
-      mutation_prob: 0.05,
+      learning_rate: 0.15,
+      mutation_prob: 0.02,
       mutation_shift: 0.05
     }
