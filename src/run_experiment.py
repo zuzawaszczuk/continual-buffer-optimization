@@ -28,7 +28,7 @@ config = Config(**data_config)
 
 
 start_time = datetime.datetime.now()
-folder_name = f"{config.dataset.name}_100_ncall_{start_time.strftime('%Y-%m-%d %H:%M')}"
+folder_name = f"{config.dataset.name}_2tasks_{start_time.strftime('%Y-%m-%d %H:%M')}"
 
 os.makedirs(folder_name, exist_ok=True)
 
@@ -49,13 +49,19 @@ print_dataset_stats(benchmark)
 history_ecdf = pd.DataFrame()
 best_mask_per_strategy = {}
 
+
+with open("best_masks.pkl", "rb") as f:
+    start_masks = pickle.load(f)
+
+start_mask = start_masks["HillClimbing"]
+
 for strategy_conf in config.strategies:
     start_time = datetime.datetime.now()
     logger.info(
         f"Running strategy: {strategy_conf.name} | Start time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
-    OptimizerClass = get_optimizer(strategy_conf.name)
+    OptimizerClass = get_optimizer(strategy_conf.class_name)
 
     optimizer = OptimizerClass(
         benchmark=benchmark,
@@ -64,7 +70,7 @@ for strategy_conf in config.strategies:
         logger=logger,
     )
 
-    best_score, best_masks = optimizer.optimize()
+    best_score, best_masks = optimizer.optimize(start_mask)
 
     print(f"{strategy_conf.name} calls {optimizer.calls_used}")
 

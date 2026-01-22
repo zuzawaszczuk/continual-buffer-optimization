@@ -2,6 +2,7 @@ from typing import Type
 
 from .genetic_algorithm import GeneticAlgorithm
 from .hill_climbing import HillClimbing
+from .hill_climbing_start import HillClimbingStart
 from .optimizer import Optimizer
 from .pbil import PBILOptimizer
 from .random_search import RandomSearch
@@ -11,6 +12,7 @@ __all__ = ["HillClimbing", "RandomSearch"]
 STRATEGY_MAP: dict[str, Type[Optimizer]] = {
     "RandomSearch": RandomSearch,
     "HillClimbing": HillClimbing,
+    "HillClimbingStart": HillClimbingStart,
     "Genetic": GeneticAlgorithm,
     "PBIL": PBILOptimizer,
     # "Heuristic": HeuristicOptimizer

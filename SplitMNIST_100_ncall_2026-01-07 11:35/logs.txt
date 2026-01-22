@@ -96,3 +96,9 @@ Function value 0.6608869623207736
 Test value 0.7321
 Function value 0.20398466155385128
 Test value 0.1999
+Function value HillClimbing 0.7291597199066355
+Test value HillClimbing 0.6686
+Function value RandomSearch 0.6608869623207736
+Test value RandomSearch 0.7321
+Function value Without Buffer 0.20398466155385128
+Test value Without Buffer 0.1999
