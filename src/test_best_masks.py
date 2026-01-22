@@ -11,7 +11,7 @@ from objective import Function, TestFunction
 from objective.manage_benchmark import get_benchmark
 from utils import plot_heatmaps
 
-folder_name = "SplitMNIST_500_ncall_3_tasks"
+folder_name = "SplitMNIST_2tasks_2026-01-10 14:16"
 
 with open(f"{folder_name}/masks.pkl", "rb") as f:
     best_mask_per_strategy = pickle.load(f)
@@ -33,12 +33,10 @@ test_func = TestFunction(benchmark, config.model)
 metrics: List[pd.DataFrame] = []
 
 
-best_mask_per_strategy["Without Buffer"] = {
-    0: np.array([2]),
-    1: np.array([2]),
-    2: np.array([2]),
-    3: np.array([]),
+best_mask_per_strategy["Without Buffer"] = { 
+    i: np.array([]) for i in range(config.dataset.n_tasks - 1)
 }
+
 for best_masks in best_mask_per_strategy:
     print(best_masks)
     function_value = func(best_mask_per_strategy[best_masks])
@@ -64,8 +62,13 @@ for best_masks in best_mask_per_strategy:
     index = [f"Exp{i:03d}" for i in range(num_rows)]
 
     df = pd.DataFrame(
-        data_dict,
-        index=index
+        {
+            f"after_{key}": [
+                v for k, v in sorted(metrics.items()) if k.startswith(prefix)
+            ]
+            for key, metrics in test_value.items()
+        },
+        index=["Exp000", "Exp001"],
     )
     metrics.append(df)
 

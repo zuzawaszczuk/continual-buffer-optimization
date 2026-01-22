@@ -1,0 +1,27 @@
+dataset:
+  eval_ratio: 0.2
+  n_tasks: 2
+  name: SplitMNIST
+  seed: 42
+  test_ratio: 0.2
+model:
+  batch: 512
+  criterion: CrossEntropyLoss
+  dropout: 0.5
+  epochs: 5
+  hidden_dims: 128
+  input_dim: 784
+  lr: 0.01
+  optimizer: SGD
+  output_dim: 4
+  type: SimpleMLP
+strategies:
+- buffer_size: 500
+  n_calls: 100
+  name: HillClimbing
+  params:
+    restart: 1
+- buffer_size: 500
+  n_calls: 100
+  name: RandomSearch
+  params: {}
