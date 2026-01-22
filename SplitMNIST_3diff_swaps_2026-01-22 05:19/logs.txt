@@ -1,0 +1,56 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 5,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 4,
+        "batch": 128
+    },
+    "strategies": [
+        {
+            "class_name": "HillClimbingStart",
+            "name": "HillClimbingStart swaps 1",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "swaps": 1
+            }
+        },
+        {
+            "class_name": "HillClimbingStart",
+            "name": "HillClimbingStart swaps 10",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "swaps": 10
+            }
+        },
+        {
+            "class_name": "HillClimbingStart",
+            "name": "HillClimbingStart swaps 50",
+            "buffer_size": 500,
+            "n_calls": 100,
+            "params": {
+                "swaps": 50
+            }
+        }
+    ]
+}
+Running strategy: HillClimbingStart swaps 1 | Start time: 2026-01-22 05:19:09
+Best accuracy for HillClimbingStart swaps 1: 0.8266088696232078
+Running strategy: HillClimbingStart swaps 10 | Start time: 2026-01-22 08:49:04
+Best accuracy for HillClimbingStart swaps 10: 0.8297765921973992
+Running strategy: HillClimbingStart swaps 50 | Start time: 2026-01-22 09:32:02
+Best accuracy for HillClimbingStart swaps 50: 0.8271090363454485

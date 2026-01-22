@@ -67,3 +67,21 @@ Function value RandomSearch 0.8904829258436048
 Test value RandomSearch 0.8941544382968487
 Function value Without Buffer 0.4718124873711861
 Test value Without Buffer 0.4791917248015396
+Function value HillClimbing 0.8931097191351788
+Test value HillClimbing 0.9023334135193649
+Function value RandomSearch 0.7951101232572236
+Test value RandomSearch 0.8963194611498677
+Function value Without Buffer 0.47504546373004647
+Test value Without Buffer 0.4779889343276401
+Function value HillClimbing 0.8621943827035765
+Test value HillClimbing 0.8482078421938898
+Function value RandomSearch 0.8961406344716104
+Test value RandomSearch 0.9025739716141448
+Function value Without Buffer 0.47302485350575874
+Test value Without Buffer 0.4791917248015396
+Function value HillClimbing 0.8765407152960194
+Test value HillClimbing 0.8830887659369738
+Function value RandomSearch 0.8797736916548797
+Test value RandomSearch 0.9083473658888621
+Function value Without Buffer 0.4724186704384724
+Test value Without Buffer 0.4789511667067597

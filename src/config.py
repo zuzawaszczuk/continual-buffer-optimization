@@ -25,6 +25,7 @@ class ModelConfig(BaseModel):
 
 
 class HyperparamStrategyConfig(BaseModel):
+    class_name: str
     name: str
     buffer_size: int
     n_calls: int
