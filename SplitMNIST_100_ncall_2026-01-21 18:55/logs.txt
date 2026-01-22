@@ -1,0 +1,81 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 3,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 5,
+        "batch": 512
+    },
+    "strategies": [
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 10,
+            "params": {}
+        },
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 10,
+            "params": {
+                "restart": 2
+            }
+        },
+        {
+            "name": "Genetic",
+            "buffer_size": 500,
+            "n_calls": 10,
+            "params": {
+                "epochs": 25,
+                "population": 3,
+                "mutation_rate": 0.1,
+                "reproduce_rate": 0.9,
+                "n_elite": 2,
+                "tournament_size": 2
+            }
+        },
+        {
+            "name": "PBIL",
+            "buffer_size": 500,
+            "n_calls": 10,
+            "params": {
+                "epochs": 25,
+                "population": 2,
+                "learning_rate": 0.15,
+                "mutation_prob": 0.02,
+                "mutation_shift": 0.05
+            }
+        }
+    ]
+}
+Running strategy: RandomSearch | Start time: 2026-01-21 18:55:52
+Best accuracy for RandomSearch: -0.7238241881298992
+Running strategy: HillClimbing | Start time: 2026-01-21 18:59:55
+Best accuracy for HillClimbing: -0.723124300111982
+Running strategy: Genetic | Start time: 2026-01-21 19:03:19
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Epoch: 4
+Best accuracy for Genetic: -0.701427771556551
+Running strategy: PBIL | Start time: 2026-01-21 19:06:45
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Epoch: 4
+Epoch: 5
+Best accuracy for PBIL: -0.7147256438969765

@@ -38,6 +38,8 @@ class GeneticAlgorithm(Optimizer):
         self.epochs = self.params.get("epochs", 1)
 
     def optimize(self) -> Tuple[float, Solution]:
+        best_global_ind = self.population[0]
+
         for epoch in range(self.epochs):
             self.logger.info(f"Epoch: {epoch}")
 
@@ -48,14 +50,21 @@ class GeneticAlgorithm(Optimizer):
             new_population = self.reproduction(new_population)
 
             for ind in new_population:
+                if self.calls_used >= self.n_calls:
+                    break
+                    
                 if np.random.uniform(0, 1) < self.params.get("mutation_rate", 0.1):
                     ind.masks = self.mutation(ind.masks)
                     ind.fitness = self.evaluate(ind.masks)
 
             self.population, best_ind = self.elite_selection(new_population)
+            
+            if best_ind.fitness is not None:
+                if best_global_ind.fitness is None or best_ind.fitness > best_global_ind.fitness:
+                    best_global_ind = copy.deepcopy(best_ind)
 
-        assert isinstance(best_ind.fitness, float)
-        return best_ind.fitness, best_ind.masks
+        final_score = best_global_ind.fitness if best_global_ind.fitness is not None else 0.0
+        return final_score, best_global_ind.masks
 
     def tournament_selection(self, k: int = 2) -> List[Individual]:
         new_population = []
@@ -76,7 +85,7 @@ class GeneticAlgorithm(Optimizer):
 
     def reproduction(self, population: List[Individual]) -> List[Individual]:
         new_population = []
-        for i in range(0, self.population_size - 1, 2):
+        for i in range(0, len(population) - 1, 2):
             if np.random.uniform(0, 1) < self.params.get("reproduce_rate", 0.1):
                 new_pop1, new_pop2 = self.reproduce(
                     population[i].masks, population[i + 1].masks
@@ -89,7 +98,18 @@ class GeneticAlgorithm(Optimizer):
     def reproduce(
         self, solution_a: Solution, solution_b: Solution
     ) -> Tuple[Solution, Solution]:
-        keys = list(solution_a.keys())
+        keys = sorted(list(solution_a.keys()))
+        if len(keys) == 1:
+            tid = keys[0]
+            mask1 = solution_a[tid]
+            mask2 = solution_b[tid]
+            if len(mask1) > 1:
+                cut = np.random.randint(1, len(mask1))
+                new_mask1 = np.concatenate((mask1[:cut], mask2[cut:]))
+                new_mask2 = np.concatenate((mask2[:cut], mask1[cut:]))
+                return {tid: new_mask1}, {tid: new_mask2}
+            else:
+                return solution_a, solution_b
         cut = np.random.randint(1, len(keys))
 
         child_a: Solution = {}
@@ -111,9 +131,9 @@ class GeneticAlgorithm(Optimizer):
         all_indices = np.arange(self.task_sizes[idx_mask])
         available = np.setdiff1d(all_indices, masks[idx_mask])
 
-        idx_to_change = np.random.randint(0, len(masks[idx_mask]) - 1)
-
-        masks[idx_mask][idx_to_change] = np.random.choice(available)
+        if len(available) > 0:
+            idx_to_change = np.random.randint(0, len(masks[idx_mask]))
+            masks[idx_mask][idx_to_change] = np.random.choice(available)
 
         return masks
 
@@ -121,15 +141,21 @@ class GeneticAlgorithm(Optimizer):
         self, population: List[Individual]
     ) -> Tuple[List[Individual], Individual]:
         valid_population = [ind for ind in population if ind.fitness is not None]
+        
+        if not valid_population:
+            return population[:self.population_size], population[0]
+
         sorted_pop = sorted(valid_population, key=lambda ind: ind.fitness, reverse=True)  # type: ignore
 
         elites = sorted_pop[: self.n_elite]
         best_ind = elites[0]
 
         remaining = sorted_pop[self.n_elite :]
-        new_population = random.sample(
-            remaining, k=min(self.population_size - self.n_elite, len(remaining))
-        )
+        k_needed = self.population_size - len(elites)
+        if len(remaining) >= k_needed:
+            new_population = random.sample(remaining, k=k_needed)
+        else:
+            new_population = remaining + random.choices(elites, k=k_needed - len(remaining))
 
         return elites + new_population, best_ind
 

@@ -48,6 +48,18 @@ for best_masks in best_mask_per_strategy:
     )
 
     prefix = "Top1_Acc_Exp/eval_phase/test_stream"
+    data_dict = {
+        f"after_{key}": [
+            v for k, v in sorted(task_metrics.items()) if k.startswith(prefix)
+        ]
+        for key, task_metrics in test_value.items()
+    }
+    if data_dict:
+        num_rows = len(list(data_dict.values())[0])
+    else:
+        num_rows = 0
+    
+    index = [f"Exp{i:03d}" for i in range(num_rows)]
 
     df = pd.DataFrame(
         {

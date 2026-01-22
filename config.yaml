@@ -21,14 +21,14 @@ strategies:
   - class_name: "HillClimbingStart"
     name: "HillClimbingStart swaps 1"
     buffer_size: 500
-    n_calls: 50
+    n_calls: 500
     params: {
       swaps: 1
     }
   - class_name: "HillClimbingStart"
     name: "HillClimbingStart swaps 10"
     buffer_size: 500
-    n_calls: 50
+    n_calls: 500
     params: {
       swaps: 10
     }

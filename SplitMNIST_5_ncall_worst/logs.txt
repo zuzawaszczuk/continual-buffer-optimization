@@ -1,0 +1,76 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 3,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 5,
+        "batch": 512
+    },
+    "strategies": [
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {}
+        },
+        {
+            "name": "HillClimbing",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {
+                "restart": 1
+            }
+        },
+        {
+            "name": "Genetic",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {
+                "epochs": 25,
+                "population": 3,
+                "mutation_rate": 0.1,
+                "reproduce_rate": 0.9,
+                "n_elite": 2,
+                "tournament_size": 2
+            }
+        },
+        {
+            "name": "PBIL",
+            "buffer_size": 500,
+            "n_calls": 5,
+            "params": {
+                "epochs": 25,
+                "population": 2,
+                "learning_rate": 0.15,
+                "mutation_prob": 0.02,
+                "mutation_shift": 0.05
+            }
+        }
+    ]
+}
+Running strategy: RandomSearch | Start time: 2026-01-21 17:50:56
+Best accuracy for RandomSearch: 0.7508398656215005
+Running strategy: HillClimbing | Start time: 2026-01-21 17:52:39
+Best accuracy for HillClimbing: 0.766097424412094
+Running strategy: Genetic | Start time: 2026-01-21 17:54:22
+Epoch: 0
+Epoch: 1
+Best accuracy for Genetic: 0.7609182530795073
+Running strategy: PBIL | Start time: 2026-01-21 17:56:03
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Best accuracy for PBIL: 0.7444008958566629

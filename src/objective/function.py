@@ -5,7 +5,7 @@ import torch
 from avalanche.benchmarks import NCScenario
 from avalanche.benchmarks.utils import AvalancheDataset
 from avalanche.evaluation.metrics import accuracy_metrics, loss_metrics
-from avalanche.models import SimpleMLP
+from avalanche.models import SimpleMLP, SimpleCNN
 from avalanche.training.plugins import EvaluationPlugin
 from torch.nn import CrossEntropyLoss, MSELoss
 from torch.optim import SGD, Adam
@@ -26,6 +26,7 @@ OPTIMIZER_MAP = {
 
 MODEL_MAP = {
     "SimpleMLP": SimpleMLP,
+    "SimpleCNN": SimpleCNN,
 }
 
 
@@ -42,13 +43,18 @@ class Function:
         optimizer_cls = OPTIMIZER_MAP[self.model_config.optimizer]
         model_cls = MODEL_MAP[self.model_config.type]
 
-        model = model_cls(
-            num_classes=self.model_config.output_dim,
-            input_size=self.model_config.input_dim,
-            hidden_size=self.model_config.hidden_dims,
-            hidden_layers=1,
-            drop_rate=self.model_config.dropout,
-        )
+        if self.model_config.type == "SimpleCNN":
+            model = model_cls(
+                num_classes=self.model_config.output_dim
+            )
+        else:
+            model = model_cls(
+                num_classes=self.model_config.output_dim,
+                input_size=self.model_config.input_dim,
+                hidden_size=self.model_config.hidden_dims,
+                hidden_layers=1,
+                drop_rate=self.model_config.dropout,
+            )
 
         evaluator = EvaluationPlugin(
             accuracy_metrics(experience=True, stream=True),
