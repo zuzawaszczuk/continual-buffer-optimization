@@ -9,7 +9,7 @@ from collections import defaultdict
 from config import Config
 from objective.manage_benchmark import get_benchmark
 
-INPUT_DIR = "SplitMNIST_500_ncall_3_tasks"
+INPUT_DIR = "SplitMNIST_5_ncall_worst"
 MASKS_FILE = INPUT_DIR + "/masks.pkl"
 CONFIG_FILE = INPUT_DIR + "/history_config.yaml"
 OUTPUT_DIR = INPUT_DIR + "/buffer_preview"

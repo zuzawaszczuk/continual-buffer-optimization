@@ -9,7 +9,7 @@ import os
 from config import Config
 from objective.manage_benchmark import get_benchmark
 
-INPUT_DIR = "SplitMNIST_500_ncall_3_tasks"
+INPUT_DIR = "SplitMNIST_100_ncall_2026-01-21 18:55"
 MASKS_FILE = INPUT_DIR + "/masks.pkl"
 CONFIG_FILE = INPUT_DIR + "/history_config.yaml"
 SAMPLES_FOR_TSNE = 30000
