@@ -1,0 +1,56 @@
+{
+    "dataset": {
+        "name": "SplitMNIST",
+        "n_tasks": 5,
+        "eval_ratio": 0.2,
+        "test_ratio": 0.2,
+        "seed": 42
+    },
+    "model": {
+        "type": "SimpleMLP",
+        "input_dim": 784,
+        "hidden_dims": 128,
+        "output_dim": 10,
+        "optimizer": "SGD",
+        "lr": 0.01,
+        "dropout": 0.5,
+        "criterion": "CrossEntropyLoss",
+        "epochs": 4,
+        "batch": 128
+    },
+    "strategies": [
+        {
+            "name": "RandomSearch",
+            "buffer_size": 500,
+            "n_calls": 50,
+            "params": {}
+        },
+        {
+            "name": "PBIL",
+            "buffer_size": 500,
+            "n_calls": 50,
+            "params": {
+                "epochs": 20,
+                "population": 10,
+                "learning_rate": 0.2,
+                "mutation_prob": 0.05
+            }
+        }
+    ]
+}
+Running strategy: RandomSearch | Start time: 2026-01-09 02:11:51
+Best accuracy for RandomSearch: 0.7488329443147715
+Running strategy: PBIL | Start time: 2026-01-09 02:36:17
+Epoch: 0
+Epoch: 1
+Epoch: 2
+Epoch: 3
+Epoch: 4
+Epoch: 5
+Best accuracy for PBIL: 0.7726742247415805
+Function value RandomSearch 0.7289096365455152
+Test value RandomSearch 0.7372
+Function value PBIL 0.6624708236078692
+Test value PBIL 0.6311
+Function value Without Buffer 0.20431810603534512
+Test value Without Buffer 0.1992

@@ -3,6 +3,7 @@ import logging
 import os
 import pickle
 
+import os
 import pandas as pd
 import torch
 import yaml
@@ -21,6 +22,9 @@ with open("config.yaml", "r") as file:
     data_config = yaml.safe_load(file)
 
 config = Config(**data_config)
+    data_config = yaml.safe_load(file)
+
+config = Config(**data_config)
 
 
 start_time = datetime.datetime.now()
@@ -28,9 +32,10 @@ folder_name = f"{config.dataset.name}_2tasks_{start_time.strftime('%Y-%m-%d %H:%
 
 os.makedirs(folder_name, exist_ok=True)
 
-with open(f"{folder_name}/history_config.yaml", "w") as f:
+with open(f"{folder_name}/history_config.yaml", 'w') as f:
     yaml.dump(data_config, f)
 
+fh = logging.FileHandler(f"{folder_name}/logs.txt")
 fh = logging.FileHandler(f"{folder_name}/logs.txt")
 fh.setLevel(logging.DEBUG)
 logger = logging.getLogger("GA_logger")
@@ -75,8 +80,9 @@ for strategy_conf in config.strategies:
     logger.info(f"Best accuracy for {strategy_conf.name}: {best_score}")
 
 print(history_ecdf)
+
 plot_ecdf(history_ecdf, folder_name)
 plot_history(history_ecdf, folder_name)
 
-with open(f"{folder_name}/masks.pkl", "wb") as f:
+with open(f"{folder_name}/masks.pkl", 'wb') as f:
     pickle.dump(best_mask_per_strategy, f)

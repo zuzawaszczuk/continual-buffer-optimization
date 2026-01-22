@@ -52,7 +52,6 @@ class PBILOptimizer(Optimizer):
                 score = self._evaluate(sample)
                 population_scores.append(score)
                 population_solutions.append(sample)
-                self.calls_used += 1
 
             if not population_scores:
                 break
